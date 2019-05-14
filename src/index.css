@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.preloader{
+  position: absolute;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}

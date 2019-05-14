@@ -1,26 +1,81 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './App.css';
+import Navbar from './components/navigation';
+import Home from './components/body/home';
+import SignUpForm from './components/auth/signUp';
+import SignInForm from './components/auth/signIn';
+import firebase from './components/system/fireConfig'
+import { AuthUserContext } from './components/auth/session';
+import PasswordForgetForm from './components/auth/forgetPassword';
+import { PrivateRoute } from './components/navigation/privateRoute';
+import Profile from './components/body/profile';
+import PageNotFound from './components/navigation/404'
+import { AuthProtectedRoute } from './components/navigation/authProtectedRoute';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      authUser: null,
+      complete:false
+    };
+
+    this.listener = firebase.auth().onAuthStateChanged(
+      authUser => { console.log(authUser)
+          authUser && authUser.emailVerified
+            ? this.setState({ authUser, complete:true })
+            : this.setState({ authUser: null,complete:true })
+        
+      },error=>alert("error", error), complete=>console.log('complete',complete)
+    )
+  
+  }
+
+  componentWillUnmount() {
+    this.listener();
+  }
+  render() {
+    if(this.state.complete){
+    return (
+      <AuthUserContext.Provider value={this.state.authUser}>
+        <BrowserRouter>
+          <div className="row">
+            <Navbar />
+            <div className="container">
+              <Switch>
+                <Route exact path='/' component={Home} />
+                <AuthProtectedRoute path='/signUp' auth={this.state.authUser} component={SignUpForm} />
+                <AuthProtectedRoute path='/signIn' auth={this.state.authUser} component={SignInForm} />
+                <Route path='/forgetPassword' component={PasswordForgetForm} />
+                <PrivateRoute path="/profile" auth={this.state.authUser}  component={Profile} />
+                <Route component={PageNotFound} />
+              </Switch>
+            </div>
+          </div>
+        </BrowserRouter>
+      </AuthUserContext.Provider>
+    );
+  }else return (
+    <div className="valign-wrapper center-align preloader">
+      <div className="preloader-wrapper active">
+        <div className="spinner-layer spinner-red-only">
+          <div className="circle-clipper left">
+            <div className="circle"></div>
+          </div><div className="gap-patch">
+            <div className="circle"></div>
+          </div><div className="circle-clipper right">
+            <div className="circle"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
+} 
 }
 
 export default App;

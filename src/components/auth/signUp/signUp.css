@@ -1,0 +1,13 @@
+#imageWrap img {
+    max-height: 200px;
+    max-width: 200px;
+}
+#imageWrap{
+    line-height: 0;
+}
+[hidden]{
+    display: none !important
+}
+.pointer{
+    cursor:  pointer !important;
+}
