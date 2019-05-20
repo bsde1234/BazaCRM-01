@@ -16,7 +16,8 @@ import 'firebase/firestore';
   
   firebase.initializeApp(config);
 
-  firebase.firestore();
+//  firebase.firestore();
+  
 
 
 export default firebase;

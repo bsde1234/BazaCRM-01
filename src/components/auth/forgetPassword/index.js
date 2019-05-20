@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { doPasswordReset } from '../../firebase/fireAuthCRUD';
+import { ErrorHandler } from '../../system/errorHandler';
 
 
 
@@ -26,7 +27,12 @@ export default class PasswordForgetForm extends Component {
         this.setState({ success: true });
       })
       .catch(error => {
-        this.setState({ error });
+        
+        ErrorHandler(error).then((text)=>{
+          console.log(text)
+          this.setState({ error: text });
+        })
+        
       });
 
 
@@ -42,23 +48,25 @@ export default class PasswordForgetForm extends Component {
     const isInvalid = email === '';
 
     return (
-        <>
-            <div className="center-align" hidden={success?false:true}><h3>Ссылка на смену пороля отправленна Вам<br/>на адресс електронной почты.</h3></div>
+        <div className="col s4 offset-s4">
+            <div className="center-align"><h5>Сброс пороля</h5></div>
+            <div className="center-align" hidden={success?false:true}><br/> <h4>Ссылка на смену пороля отправленна Вам<br/>на адресс електронной почты.</h4></div>
             <form onSubmit={this.onSubmit} hidden={success?true:false}>
+              <div className="input-field ">
+                <label htmlFor="email">Email Address</label>
                 <input
-                name="email"
-                value={this.state.email}
-                onChange={this.onChange}
-                type="text"
-                placeholder="Email Address"
+                  name="email"
+                  value={this.state.email}
+                  onChange={this.onChange}
+                  type="text"
                 />
-                <button className="waves-effect btn" disabled={isInvalid} type="submit">
+                {error && <span className="red-text">{error}</span>}
+              </div>
+                <button className="waves-effect btn btnblock" disabled={isInvalid} type="submit">
                 Reset My Password
                 </button>
-
-                {error && <p>{error.message}</p>}
             </form>
-      </>
+      </div>
     );
   }
 }

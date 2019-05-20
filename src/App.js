@@ -12,6 +12,8 @@ import { PrivateRoute } from './components/navigation/privateRoute';
 import Profile from './components/body/profile';
 import PageNotFound from './components/navigation/404'
 import { AuthProtectedRoute } from './components/navigation/authProtectedRoute';
+import { Preloader } from './components/system/preloader';
+import AddOfferIndex from './components/body/addOffer';
 
 
 
@@ -24,16 +26,14 @@ class App extends Component {
       authUser: null,
       complete:false
     };
-
+    
     this.listener = firebase.auth().onAuthStateChanged(
       authUser => { console.log(authUser)
           authUser && authUser.emailVerified
             ? this.setState({ authUser, complete:true })
             : this.setState({ authUser: null,complete:true })
-        
       },error=>alert("error", error), complete=>console.log('complete',complete)
     )
-  
   }
 
   componentWillUnmount() {
@@ -49,6 +49,7 @@ class App extends Component {
             <div className="container">
               <Switch>
                 <Route exact path='/' component={Home} />
+                <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
                 <AuthProtectedRoute path='/signUp' auth={this.state.authUser} component={SignUpForm} />
                 <AuthProtectedRoute path='/signIn' auth={this.state.authUser} component={SignInForm} />
                 <Route path='/forgetPassword' component={PasswordForgetForm} />
@@ -61,21 +62,14 @@ class App extends Component {
       </AuthUserContext.Provider>
     );
   }else return (
-    <div className="valign-wrapper center-align preloader">
-      <div className="preloader-wrapper active">
-        <div className="spinner-layer spinner-red-only">
-          <div className="circle-clipper left">
-            <div className="circle"></div>
-          </div><div className="gap-patch">
-            <div className="circle"></div>
-          </div><div className="circle-clipper right">
-            <div className="circle"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Preloader/>
   )
 } 
 }
 
 export default App;
+
+
+
+
+

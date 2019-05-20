@@ -22,7 +22,7 @@ class SignInForm extends Component {
         const { email, password } = this.state;
 
         doSignInWithEmailAndPassword(email, password)
-            .then((user) => {
+            .then((user) => { console.log(this.state)
                 if (user && user.user.emailVerified)
                     this.setState({ ...INITIAL_STATE });
                 else

@@ -1,50 +1,49 @@
 
-import firebase  from './../../system/fireConfig';
+import firebase from './../../system/fireConfig';
 
-export function getData(collection, key) {
+export function getDataByKey(collection, key) {
 
-    if (key) {
-        return firebase.firestore().collection(collection).doc(key).get().then((data) => { return data });
-    }
-
-}
-
-export function saveInFirestore(data) {
-    if (data) {
-        let db = firebase.firestore().collection('users');
-        db.add({
-            ...data
-        }).then((docRef) => {
-            console.log(docRef);
-
-        })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-            })
-    }
-    return true
-}
-
-export function updateInFirestoreByKey(data, key) {
-    if (data.title && data.tooltipPosition) {
-        let db = firebase.firestore().collection('files').doc(key);
-        return db.update({
-            title: data.title,
-            tooltipPosition: data.tooltipPosition
-        }).then(() => {
-            return true;
-        })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-                return false;
-            })
-    }
-
-}
-export function deleteInFirestoreByKey(key) {
-    firebase.firestore().collection('files').doc(key).delete().then(() => {
-        console.log("Document successfully deleted!");
+    var docRef = firebase.firestore().collection(collection).doc(key);
+    return docRef.get().then(function (doc) {
+        if (doc.exists) {
+            return doc.data();
+        } else {
+            return null;
+        }
     }).catch(function (error) {
+        return error;
+    });
+}
+export function dataSnapshot(collection, key) {
+    return firebase.firestore().collection(collection).doc(key)
+}
+export function getCollection(collection) {
+    return firebase.firestore().collection(collection).get().then(function(querySnapshot) {
+        return querySnapshot;
+    });
+}
+export function saveInFirestore(collection, key, data) {
+    return firebase.firestore().collection(collection).doc(key).set({
+        ...data
+    })
+    .then((data) => { console.log( "DONE" )})
+    .catch((error) => { console.log( 'ERROR' )});
+}
+
+
+export function updateInFirestoreByKey( collection, key, data) {
+    if (data && collection && key) {
+        return firebase.firestore().collection(collection).doc(key).update({
+            ...data
+        })
+    }
+}
+export function deleteInFirestoreByKey(collection, key) {
+    firebase.firestore().collection(collection).doc(key).delete()
+    .then(() => {
+        console.log("Document successfully deleted!");
+    })
+    .catch(function (error) {
         console.error("Error removing document: ", error);
     });
 }

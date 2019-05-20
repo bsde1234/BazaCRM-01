@@ -2,7 +2,7 @@ export function ErrorHandler(error) {
 
     return new Promise(function (resolve, reject) {
         if (error) {
-
+            console.log(error.code)
             switch (error.code) {
                 case "auth/weak-password":
                     resolve('Weak password.');
@@ -12,6 +12,10 @@ export function ErrorHandler(error) {
                     break;
                 case "Max. size of photo - 5MB.":
                     resolve("Max. size of photo - 5MB." );
+                    break;
+
+                case "auth/invalid-email":
+                    resolve("Не корректный email адрес.");
                     break;
                 default: break;
             }

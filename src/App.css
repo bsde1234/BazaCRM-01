@@ -17,3 +17,7 @@ input[type=password]:not(.browser-default):focus:not([readonly]),input[type=text
     max-width: 130px;
     white-space: nowrap;
 }
+ul{
+    margin: 0;
+    padding: 0;
+}
