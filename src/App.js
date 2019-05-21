@@ -16,8 +16,6 @@ import { Preloader } from './components/system/preloader';
 import AddOfferIndex from './components/body/addOffer';
 
 
-
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +26,7 @@ class App extends Component {
     };
     
     this.listener = firebase.auth().onAuthStateChanged(
-      authUser => { console.log(authUser)
+      authUser => {
           authUser && authUser.emailVerified
             ? this.setState({ authUser, complete:true })
             : this.setState({ authUser: null,complete:true })

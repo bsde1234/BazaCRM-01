@@ -109,7 +109,6 @@ export default class MainUserInfo extends Component {
         })
       })
     })
-
   }
 
   render() {
@@ -132,7 +131,7 @@ export default class MainUserInfo extends Component {
               accept="image/x-png,image/gif,image/jpeg"
             />
             <button type="button" className="btn grey darken-3 btnblock" name="action" onClick={this.addPhoto} hidden={!file && userInfo.userPic.filePath === '' ? false : true}><i className="fas fa-portrait"></i> Add Photo
-          <i className="material-icons right"></i>
+              <i className="material-icons right"></i>
             </button>
             <div hidden={file || modified || userInfo.userPic.filePath!=='' ? false : true} className="center-align">
               <div id="imageWrap"><img src={userInfo.userPic.filePath} alt="user" /></div>

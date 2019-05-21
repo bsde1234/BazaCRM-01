@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import AddImages from './addImages';
-
+import M from "materialize-css";
 
 const INITIAL_STATE = {
     title: '',
     files: [],
-    isInvalid: false
+    isInvalid: false,
+    offer_type_1: ''
 };
 
 export default class AddOfferMainForm extends Component {
@@ -17,23 +18,32 @@ export default class AddOfferMainForm extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.addImagesHandler = this.addImagesHandler.bind(this);
+        
     }
 
     handleChange(event) {
-        this.setState({ title: event.target.value });
+        this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleSubmit(event) {
+    handleSubmit(event) { 
         event.preventDefault();
         this.setState({
             ...INITIAL_STATE
         })
     }
 
-    addImagesHandler(el){
-        console.log(el);
+    addImagesHandler(images) {
+        this.setState({
+            files: images
+        })
+    }
+    componentDidMount() {
+        // Auto initialize all the things!
+        M.AutoInit();
     }
     render() {
+        console.log(this.state);
         return (
             <form onSubmit={this.handleSubmit} className="col s8 offset-s2 center-align">
                 <div className="input-field">
@@ -46,13 +56,26 @@ export default class AddOfferMainForm extends Component {
                         onChange={this.handleChange}
                     />
                 </div>
-                <div>
-                    <AddImages user={this.state.user} addImage={this.addImageHandler} />
+                <div className="input-field col s12">
+                    <select name="offer_type_1" onChange={this.handleChange}>
+                        <option value="" disabled defaultValue >Тип Недвижимости</option>
+                        <option value="1">Дом</option>
+                        <option value="2">Участок</option>
+                        <option value="3">Коммерческая недвижимость</option>
+                    </select>
+                    <label>Materialize Select</label>
                 </div>
-                <button className="waves-effect waves-light btn-small btnblock" disabled={this.state.isInvalid} type="submit">
-                    Sign Up
+                <div>
+                    <AddImages user={this.state.user} addImage={this.addImagesHandler} />
+                </div>
+                <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
+                    Сохранить
+                </button>
+                <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
+                    Опубликовать
                 </button>
             </form>
         );
     }
 }
+

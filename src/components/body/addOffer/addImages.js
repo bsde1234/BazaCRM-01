@@ -3,13 +3,14 @@ import React, { Component } from 'react'
 export default class AddImages extends Component {
   constructor(props) {
     super(props);
-
     this.state = ({
       uid: this.props.user.uid,
       files: [],
       error: ''
     });
     this.handleFiles = this.handleFiles.bind(this);
+    this.deleteImage = this.deleteImage.bind(this);
+    
   }
   addPhoto() {
     document.getElementById('file').click();
@@ -24,36 +25,38 @@ export default class AddImages extends Component {
             this.setState(prevState => ({
               files: [...prevState.files, img.src],
               error: ''
-            }));
+            }), ()=>{
+              this.props.addImage(this.state.files)
+            });
           } else {
             this.setState({
-              error: 'Максимальное количество изображений.'
+              error: 'Размер изображения не должен привышать 5 МБ.'
             })
           }
         } else {
           this.setState({
-            error: 'Размер изображения не должен привышать 5 МБ.'
+            error: 'Максимальное количество изображений.'
           })
         }
-
       }
-
     }
+    
   }
-  deleteImage(el) {
-    console.log(el)
+  deleteImage(event) {
+      let src = event.target.getAttribute('src');
+      this.setState({
+        error: '',
+        files: this.state.files.filter((val) => val !== src)
+      });
   }
   render() {
     const {
       files,
       error
     } = this.state;
-
     return (
       <div>
-        <button type="button" className="btn grey darken-3 btnblock" name="action" onClick={this.addPhoto} hidden={files.length >= 5 ? true : false}><i className="fas fa-portrait"></i> Add Photo
-            <i className="material-icons right"></i>
-        </button>
+        <button type="button" className="btn grey darken-3 " name="action" onClick={this.addPhoto} hidden={files.length >= 5 ? true : false}> Add Photo</button>
         <div className="center-align red-text">{error}</div>
         <input
           id="file"
@@ -64,8 +67,9 @@ export default class AddImages extends Component {
           multiple
           accept="image/x-png,image/gif,image/jpeg"
         />
-        <ul>
-          {files.map((reptile, index) => <li key={index}> <img width="120px" className="responsive-img" src={reptile} alt="" /> </li>)}
+        <br/>
+        <ul className="flexInlineList" hidden={files?false:true}>
+          {files.map((reptile, index) => <li key={index} onClick={this.deleteImage}> <img width="120px" className="responsive-img" src={reptile} alt="" /> </li>)}
         </ul>
 
       </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Preloader } from '../../system/preloader';
 import AddOfferMainForm from './mainForm';
-
+import './addOffer.css'
 
 
 export default class AddOfferIndex extends Component {
