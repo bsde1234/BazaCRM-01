@@ -4,7 +4,6 @@ export default class AddImages extends Component {
   constructor(props) {
     super(props);
     this.state = ({
-      uid: this.props.user.uid,
       files: [],
       error: ''
     });
@@ -23,9 +22,10 @@ export default class AddImages extends Component {
             const img = document.createElement("img");
             img.src = window.URL.createObjectURL(event.target.files[i]);
             this.setState(prevState => ({
-              files: [...prevState.files, img.src],
+              files: [...prevState.files, img],
               error: ''
             }), ()=>{
+              // RETURN STATE TO PARENT VIA  addImage MATHOD. 
               this.props.addImage(this.state.files)
             });
           } else {
@@ -40,13 +40,12 @@ export default class AddImages extends Component {
         }
       }
     }
-    
   }
   deleteImage(event) {
       let src = event.target.getAttribute('src');
       this.setState({
         error: '',
-        files: this.state.files.filter((val) => val !== src)
+        files: this.state.files.filter((val) => val.src !== src)
       });
   }
   render() {
@@ -69,7 +68,7 @@ export default class AddImages extends Component {
         />
         <br/>
         <ul className="flexInlineList" hidden={files?false:true}>
-          {files.map((reptile, index) => <li key={index} onClick={this.deleteImage}> <img width="120px" className="responsive-img" src={reptile} alt="" /> </li>)}
+          {files.map((reptile, index) => <li key={index} onClick={this.deleteImage}> <img width="120px" className="responsive-img" src={reptile.src} alt="" /> </li>)}
         </ul>
 
       </div>

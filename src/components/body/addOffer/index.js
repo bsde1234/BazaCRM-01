@@ -21,7 +21,7 @@ export default class AddOfferIndex extends Component {
   }
   render() {
     return (
-      <div className="center-align">
+      <div className="">
         <div className="col s12 ">
           <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
           <br/>

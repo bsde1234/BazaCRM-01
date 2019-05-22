@@ -4,7 +4,7 @@
 
 import firebase  from './../../system/fireConfig';
 import 'firebase/auth';
-import {saveInFirestore} from './../firestoreCRUD/'
+import {saveInFirestoreByKey} from './../firestoreCRUD/'
 
     const auth = firebase.auth();
     export  function doCreateUserWithEmailAndPassword (email, password,name,phone) {
@@ -16,7 +16,7 @@ import {saveInFirestore} from './../firestoreCRUD/'
             });
         }).then(()=>{
             let data = {userInfo:{ email:email, name:name, phone:phone, userPic:{filePath:'', name:''}}}
-            saveInFirestore(`users/`, auth.currentUser.uid, data)
+            saveInFirestoreByKey(`users/`, auth.currentUser.uid, data)
         }) 
     }
     export  function doSignInWithEmailAndPassword(email, password){

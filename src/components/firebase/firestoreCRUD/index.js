@@ -22,14 +22,19 @@ export function getCollection(collection) {
         return querySnapshot;
     });
 }
-export function saveInFirestore(collection, key, data) {
+export function saveInFirestoreByKey(collection, key, data) {
     return firebase.firestore().collection(collection).doc(key).set({
         ...data
     })
     .then((data) => { console.log( "DONE" )})
     .catch((error) => { console.log( 'ERROR' )});
 }
-
+export function saveInFirestoreAutoKey(collection,data){
+    // Add a new document with a generated id.
+    return firebase.firestore().collection(collection).add({
+        ...data
+    })
+}
 
 export function updateInFirestoreByKey( collection, key, data) {
     if (data && collection && key) {

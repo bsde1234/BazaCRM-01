@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import AddImages from './addImages';
 import M from "materialize-css";
+import DragNdrop from '../../system/dragNdrop';
+import { saveInFirestoreAutoKey } from '../../firebase/firestoreCRUD';
+import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
+
 
 const INITIAL_STATE = {
     title: '',
-    files: [],
     isInvalid: false,
-    offer_type_1: ''
+    offer_type_1: '',
+    data_created: new Date(),
+    approved: false,
 };
 
 export default class AddOfferMainForm extends Component {
@@ -14,40 +18,44 @@ export default class AddOfferMainForm extends Component {
         super(props);
         this.state = {
             ...INITIAL_STATE,
-            user: this.props.user
+            uid: this.props.user.uid
         };
+        let images = [];
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addImagesHandler = this.addImagesHandler.bind(this);
-        
     }
 
     handleChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
-
-    handleSubmit(event) { 
+    handleSubmit(event) {
         event.preventDefault();
-        this.setState({
-            ...INITIAL_STATE
+
+        saveInFirestoreAutoKey('offers/', this.state)
+        .then((docRef) => {
+            SaveInStorageByURL(`offers/${docRef.id}/`, this.state.uid, this.images);
         })
+        .catch(function(error) {
+            console.error("Error adding document: ", error);
+        });
+
     }
 
     addImagesHandler(images) {
-        this.setState({
-            files: images
-        })
+        this.images = images;
+
     }
     componentDidMount() {
         // Auto initialize all the things!
         M.AutoInit();
     }
     render() {
-        console.log(this.state);
+
         return (
-            <form onSubmit={this.handleSubmit} className="col s8 offset-s2 center-align">
+            <form onSubmit={this.handleSubmit} className="col s8 offset-s2 ">
                 <div className="input-field">
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title">Заголовок</label>
                     <input
                         id="title"
                         name="title"
@@ -56,17 +64,17 @@ export default class AddOfferMainForm extends Component {
                         onChange={this.handleChange}
                     />
                 </div>
-                <div className="input-field col s12">
+                <div className="input-field ">
                     <select name="offer_type_1" onChange={this.handleChange}>
                         <option value="" disabled defaultValue >Тип Недвижимости</option>
-                        <option value="1">Дом</option>
-                        <option value="2">Участок</option>
-                        <option value="3">Коммерческая недвижимость</option>
+                        <option value="Дом">Дом</option>
+                        <option value="Участок">Участок</option>
+                        <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
                     </select>
-                    <label>Materialize Select</label>
+                    <label>Тип Недвижимости</label>
                 </div>
                 <div>
-                    <AddImages user={this.state.user} addImage={this.addImagesHandler} />
+                    <DragNdrop addImage={this.addImagesHandler} />
                 </div>
                 <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
                     Сохранить

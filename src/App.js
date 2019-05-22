@@ -14,6 +14,7 @@ import PageNotFound from './components/navigation/404'
 import { AuthProtectedRoute } from './components/navigation/authProtectedRoute';
 import { Preloader } from './components/system/preloader';
 import AddOfferIndex from './components/body/addOffer';
+import DragNdrop from './components/system/dragNdrop';
 
 
 class App extends Component {
@@ -48,6 +49,8 @@ class App extends Component {
               <Switch>
                 <Route exact path='/' component={Home} />
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
+                <Route path='/dragndrop' component={DragNdrop} />
+                
                 <AuthProtectedRoute path='/signUp' auth={this.state.authUser} component={SignUpForm} />
                 <AuthProtectedRoute path='/signIn' auth={this.state.authUser} component={SignInForm} />
                 <Route path='/forgetPassword' component={PasswordForgetForm} />

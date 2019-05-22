@@ -1,0 +1,8 @@
+.dragNdrop ul{
+    display: inline-flex;
+    align-items: center;
+}
+
+.dragNdrop li img{
+    cursor: grabbing;
+}
