@@ -2,7 +2,7 @@ export function ErrorHandler(error) {
 
     return new Promise(function (resolve, reject) {
         if (error) {
-            console.log(error.code)
+            console.log(error)
             switch (error.code) {
                 case "auth/weak-password":
                     resolve('Weak password.');

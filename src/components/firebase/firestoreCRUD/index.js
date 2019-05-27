@@ -1,4 +1,4 @@
-
+import 'firebase/firestore';
 import firebase from './../../system/fireConfig';
 
 export function getDataByKey(collection, key) {
@@ -17,17 +17,15 @@ export function getDataByKey(collection, key) {
 export function dataSnapshot(collection, key) {
     return firebase.firestore().collection(collection).doc(key)
 }
+
 export function getCollection(collection) {
-    return firebase.firestore().collection(collection).get().then(function(querySnapshot) {
-        return querySnapshot;
-    });
+   return firebase.firestore().collection(collection).where('approved', '==', true).get()
 }
+
 export function saveInFirestoreByKey(collection, key, data) {
     return firebase.firestore().collection(collection).doc(key).set({
         ...data
     })
-    .then((data) => { console.log( "DONE" )})
-    .catch((error) => { console.log( 'ERROR' )});
 }
 export function saveInFirestoreAutoKey(collection,data){
     // Add a new document with a generated id.

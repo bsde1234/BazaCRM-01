@@ -47,13 +47,12 @@ class App extends Component {
             <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path='/' component={Home} />
+                <Route exact path='/' auth={this.state.authUser} component={Home} />
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
                 <Route path='/dragndrop' component={DragNdrop} />
-                
                 <AuthProtectedRoute path='/signUp' auth={this.state.authUser} component={SignUpForm} />
                 <AuthProtectedRoute path='/signIn' auth={this.state.authUser} component={SignInForm} />
-                <Route path='/forgetPassword' component={PasswordForgetForm} />
+                <AuthProtectedRoute path='/forgetPassword' component={PasswordForgetForm} />
                 <PrivateRoute path="/profile" auth={this.state.authUser}  component={Profile} />
                 <Route component={PageNotFound} />
               </Switch>

@@ -10,19 +10,21 @@ const INITIAL_STATE = {
     password: '',
     error: null,
     verifyEmail: false,
+    emailWasSent: false
 };
 
 class SignInForm extends Component {
     constructor(props) {
         super(props);
         this.state = { ...INITIAL_STATE };
+        this.resentEmailVerify = this.resentEmailVerify.bind(this);
     }
 
     onSubmit = event => {
         const { email, password } = this.state;
 
         doSignInWithEmailAndPassword(email, password)
-            .then((user) => { console.log(this.state)
+            .then((user) => {
                 if (user && user.user.emailVerified)
                     this.setState({ ...INITIAL_STATE });
                 else
@@ -33,7 +35,13 @@ class SignInForm extends Component {
             });
         event.preventDefault();
     };
-
+    resentEmailVerify(){
+        sentVerifyUserEmail().then(()=>{
+            this.setState({
+                emailWasSent: true
+            })
+        })
+    }
     onChange = event => {
         this.setState({ [event.target.name]: event.target.value });
     };
@@ -45,7 +53,7 @@ class SignInForm extends Component {
 
         return (
             <>
-                <div className="center-align" hidden={verifyEmail ? false : true}><h5>Пожалуйста подтвердите адресс ел. почты перейдя по ссылке в електронном письме. <br /><p className="blue-text text-darken-2" onClick={sentVerifyUserEmail}>Выслать сообщение еще раз.</p></h5></div>
+                <div className="center-align" hidden={verifyEmail ? false : true}><h5>Пожалуйста подтвердите адресс ел. почты перейдя по ссылке в електронном письме. <br /><p hidden={this.state.emailWasSent?true:false} className="blue-text text-darken-2" onClick={this.resentEmailVerify}>Выслать сообщение еще раз.</p><p hidden={!this.state.emailWasSent?true:false}>Сообщение выслано повторно.</p></h5></div>
                 <form onSubmit={this.onSubmit} hidden={verifyEmail ? true : false} className="col s4 offset-s4">
                     <div className="center-align"><h5>Вход</h5></div>
                     <div className="input-field ">

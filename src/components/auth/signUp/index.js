@@ -3,14 +3,16 @@ import './signUp.css';
 import { doCreateUserWithEmailAndPassword, sentVerifyUserEmail } from '../../firebase/fireAuthCRUD';
 import { ErrorHandler } from '../../system/errorHandler';
 import { IMaskInput } from 'react-imask';
+import { saveInFirestoreByKey } from '../../firebase/firestoreCRUD';
+
 const INITIAL_STATE = {
-  username: '',
+  name: '',
   email: '',
   phone: '',
   passwordOne: '',
   passwordTwo: '',
   file: false,
-  error: {},
+  error: '',
 };
 
 class SignUpForm extends Component {
@@ -25,35 +27,39 @@ class SignUpForm extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const { email, passwordOne,phone,username } = this.state;
+    const { email, passwordOne, phone, name } = this.state;
+    doCreateUserWithEmailAndPassword(email, passwordOne, name, phone)
+      .then((data) => {
+        let userInfo = { userInfo: { email, name, phone, userPic: { filePath: '', name: '' } } }
+        saveInFirestoreByKey(`users/`, data.user.uid, userInfo).catch(error => {
+          ErrorHandler(error).then(error => {
+            this.setState({
+              error
+            })
+          })
+        }).then(() => {
+          sentVerifyUserEmail().then(() => {
+            this.setState({
+              success: true
+            })
+          })
 
-    doCreateUserWithEmailAndPassword(email, passwordOne,username,phone)
-      .then(authUser => {
-        sentVerifyUserEmail().then(() => {
-          this.setState({
-            success: true
-          });
-        }).catch((error) => {
-          ErrorHandler(error).then(val => {
-            this.setState(prevState => ({
-              error: {
-                ...prevState.error,
-                errorSentEmail: val
-              }
-            }));
-          });
+        }).catch(error => {
+          ErrorHandler(error).then(error => {
+            this.setState({
+              error
+            })
+          })
         })
+
       })
       .catch(error => {
-        ErrorHandler(error).then(val => {
-          this.setState(prevState => ({
-            error: {
-              ...prevState.error,
-              errorInput: val
-            }
-          }));
+        ErrorHandler(error).then(error => {
+          this.setState({
+            error
+          })
         })
-      });
+      })
   };
 
   onChange = event => {
@@ -63,7 +69,7 @@ class SignUpForm extends Component {
   render() {
 
     const {
-      username,
+      name,
       email,
       phone,
       passwordOne,
@@ -76,7 +82,7 @@ class SignUpForm extends Component {
       passwordOne !== passwordTwo ||
       passwordOne === '' ||
       email === '' ||
-      username === '';
+      name === '';
 
     return (
       <>
@@ -85,11 +91,11 @@ class SignUpForm extends Component {
         <form hidden={success ? true : false} onSubmit={this.onSubmit} className="col s4 offset-s4">
           <div className="center-align"><h5>Регистрация</h5></div>
           <div className="input-field ">
-            <label htmlFor="username">Full Name<span className="red-text">*</span></label>
+            <label htmlFor="name">Full Name<span className="red-text">*</span></label>
             <input
-              id="username"
-              name="username"
-              value={username}
+              id="name"
+              name="name"
+              value={name}
               onChange={this.onChange}
               type="text"
 
@@ -142,11 +148,9 @@ class SignUpForm extends Component {
             />
           </div>
 
-          <ul className="red-text">
-            {Object.keys(error).map(function (key) {
-              return <li key={key}>{error[key]}</li>;
-            })}
-          </ul>
+          <div className="red-text canter-align">
+            {error}
+          </div>
 
           <button className="waves-effect waves-light btn-small btnblock" disabled={isInvalid} type="submit">
             Sign Up

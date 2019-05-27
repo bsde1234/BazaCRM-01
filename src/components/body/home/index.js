@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import { getCollection } from '../../firebase/firestoreCRUD';
+import React from 'react'
+import RecentOffers from './recentOffers';
 
-export default class Home extends Component {
-  constructor(){
-    super();
-    getCollection('users').catch((error)=>{
-      console.log(error)
-    })
-  }
+export default class Home extends React.Component {
+
+
+    
   render() {
     return (
       <div>
         <h1>HOME</h1>
+        <div>
+          <RecentOffers user={this.props.auth}  />
+        </div>
       </div>
     )
   }

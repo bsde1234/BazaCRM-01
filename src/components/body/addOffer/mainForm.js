@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import M from "materialize-css";
 import DragNdrop from '../../system/dragNdrop';
-import { saveInFirestoreAutoKey } from '../../firebase/firestoreCRUD';
+import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
 
 
@@ -11,6 +11,9 @@ const INITIAL_STATE = {
     offer_type_1: '',
     data_created: new Date(),
     approved: false,
+    successSubmited: false,
+    error: ''
+
 };
 
 export default class AddOfferMainForm extends Component {
@@ -31,14 +34,22 @@ export default class AddOfferMainForm extends Component {
     }
     handleSubmit(event) {
         event.preventDefault();
-
         saveInFirestoreAutoKey('offers/', this.state)
-        .then((docRef) => {
-            SaveInStorageByURL(`offers/${docRef.id}/`, this.state.uid, this.images);
-        })
-        .catch(function(error) {
-            console.error("Error adding document: ", error);
-        });
+            .then((docRef) => {
+                if (this.images) {
+                    SaveInStorageByURL(`offers/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => { 
+                        let json = {'images': data}
+                        updateInFirestoreByKey(`offers/`,docRef.id, json)
+                     })
+                } else { this.setState({
+                    successSubmited: true
+                }) }
+            })
+            .catch(function (error) {
+                this.setState({
+                    error
+                })
+            });
 
     }
 
@@ -53,36 +64,40 @@ export default class AddOfferMainForm extends Component {
     render() {
 
         return (
-            <form onSubmit={this.handleSubmit} className="col s8 offset-s2 ">
-                <div className="input-field">
-                    <label htmlFor="title">Заголовок</label>
-                    <input
-                        id="title"
-                        name="title"
-                        type="text"
-                        value={this.state.title}
-                        onChange={this.handleChange}
-                    />
-                </div>
-                <div className="input-field ">
-                    <select name="offer_type_1" onChange={this.handleChange}>
-                        <option value="" disabled defaultValue >Тип Недвижимости</option>
-                        <option value="Дом">Дом</option>
-                        <option value="Участок">Участок</option>
-                        <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
-                    </select>
-                    <label>Тип Недвижимости</label>
-                </div>
-                <div>
-                    <DragNdrop addImage={this.addImagesHandler} />
-                </div>
-                <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
-                    Сохранить
+            <>
+                <form onSubmit={this.handleSubmit} className="col s8 offset-s2 ">
+                    <div className="input-field">
+                        <label htmlFor="title">Заголовок</label>
+                        <input
+                            id="title"
+                            name="title"
+                            type="text"
+                            value={this.state.title}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="input-field ">
+                        <select name="offer_type_1" onChange={this.handleChange}>
+                            <option value="" defaultValue >Веберите</option>
+                            <option value="Дом">Дом</option>
+                            <option value="Участок">Участок</option>
+                            <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
+                        </select>
+                        <label>Тип Недвижимости</label>
+                    </div>
+                    <div>
+                        <DragNdrop addImage={this.addImagesHandler} />
+                    </div>
+                    <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
+                        Сохранить
                 </button>
-                <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
-                    Опубликовать
+                    <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
+                        Опубликовать
                 </button>
-            </form>
+                <div className="test"></div>
+                </form>
+               
+            </>
         );
     }
 }
