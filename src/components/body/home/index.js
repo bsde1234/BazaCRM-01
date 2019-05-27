@@ -1,6 +1,6 @@
 import React from 'react'
 import RecentOffers from './recentOffers';
-
+import './recentOffers.css'
 export default class Home extends React.Component {
 
 
@@ -9,7 +9,8 @@ export default class Home extends React.Component {
     return (
       <div>
         <h1>HOME</h1>
-        <div>
+        <div id="recentOfferWrap">
+          <div className="center-align "><h5>Recent Offers</h5></div>
           <RecentOffers user={this.props.auth}  />
         </div>
       </div>

@@ -1,7 +1,6 @@
 
 import firebase from './../../system/fireConfig';
 import 'firebase/storage';
-import { updateInFirestoreByKey } from '../firestoreCRUD';
 export function SaveInStorage(collection, uid, data) {
   const metadata = {
     contentType: 'image/jpeg',

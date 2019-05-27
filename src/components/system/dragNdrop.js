@@ -4,8 +4,8 @@ import "./dragNdrop.css";
 
 
 export default class DragNdrop extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = ({
             files: [],
             error: ''
@@ -97,7 +97,8 @@ export default class DragNdrop extends React.Component {
         return (
             <div>
                 <div className="left-align">
-                    <button type="button" className="btn grey darken-3 " name="action" onClick={this.addPhoto} hidden={files.length >= 5 ? true : false}> Add Photo</button>
+                    <button type="button" className="btn grey darken-3 " name="action" onClick={this.addPhoto} hidden={files.length >= 5 ? true : false}> Добавить фото<span hidden={this.props.required?false:true} className="red-text">*</span></button>
+                    <div hidden={this.props.required && files.length === 0 ?false:true} className={(this.props.error ? 'red-text' : '')}>Загрузите минимум одно фото</div>
                 </div>
                 <div className="center-align red-text">{error}</div>
                 <input

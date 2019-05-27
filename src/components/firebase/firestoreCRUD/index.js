@@ -19,7 +19,7 @@ export function dataSnapshot(collection, key) {
 }
 
 export function getCollection(collection) {
-   return firebase.firestore().collection(collection).where('approved', '==', true).get()
+   return firebase.firestore().collection(collection).where('approved', '==', false).limit(9).orderBy("data_created", "desc").get()
 }
 
 export function saveInFirestoreByKey(collection, key, data) {

@@ -11,8 +11,12 @@ const INITIAL_STATE = {
     offer_type_1: '',
     data_created: new Date(),
     approved: false,
-    successSubmited: false,
-    error: ''
+    error: '',
+    system: {
+        Globalerror: '',
+        successSubmited: false,
+        noImages: ''
+    }
 
 };
 
@@ -34,22 +38,26 @@ export default class AddOfferMainForm extends Component {
     }
     handleSubmit(event) {
         event.preventDefault();
+        if (this.images) {
         saveInFirestoreAutoKey('offers/', this.state)
             .then((docRef) => {
-                if (this.images) {
+                
                     SaveInStorageByURL(`offers/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => { 
                         let json = {'images': data}
                         updateInFirestoreByKey(`offers/`,docRef.id, json)
                      })
-                } else { this.setState({
-                    successSubmited: true
-                }) }
+                
             })
             .catch(function (error) {
                 this.setState({
                     error
                 })
             });
+        } else { 
+            let system = Object.assign({}, this.state.system);    //creating copy of object
+            system.noImages = 'someothername';                        //updating value
+            this.setState({system}); 
+        }
 
     }
 
@@ -62,31 +70,44 @@ export default class AddOfferMainForm extends Component {
         M.AutoInit();
     }
     render() {
-
+        const {system}=this.state
         return (
             <>
                 <form onSubmit={this.handleSubmit} className="col s8 offset-s2 ">
                     <div className="input-field">
-                        <label htmlFor="title">Заголовок</label>
+                        <label htmlFor="title">Заголовок<span className="red-text">*</span></label>
                         <input
                             id="title"
                             name="title"
                             type="text"
                             value={this.state.title}
                             onChange={this.handleChange}
+                            minLength='10'
+                            maxLength="80"
+                            required
+                            className="validate"
                         />
+                        <span className="helper-text" data-error="wrong" data-success="right"></span>
                     </div>
                     <div className="input-field ">
-                        <select name="offer_type_1" onChange={this.handleChange}>
+                        <select name="offer_type_1" onChange={this.handleChange} className="validate">
                             <option value="" defaultValue >Веберите</option>
                             <option value="Дом">Дом</option>
                             <option value="Участок">Участок</option>
                             <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
                         </select>
-                        <label>Тип Недвижимости</label>
+                        
+                        <label>Тип Недвижимости<span className="red-text">*</span></label>
+                        <span className="helper-text" data-error="wrong" data-success="right">Helper text</span>
+                    </div>
+                    <div className="input-field ">
+                        <textarea id="textarea1" className="materialize-textarea validate" minLength="20" maxLength="800" required></textarea>
+                        <label htmlFor="textarea1">Описание<span className="red-text">*</span></label>
+                        <span className="helper-text" data-error="wrong" data-success="right"></span>
                     </div>
                     <div>
-                        <DragNdrop addImage={this.addImagesHandler} />
+                        <DragNdrop addImage={this.addImagesHandler} required={true} error={system.noImages} />
+                        
                     </div>
                     <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
                         Сохранить
