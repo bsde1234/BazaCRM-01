@@ -39,14 +39,13 @@ export default class AddOfferMainForm extends Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.images) {
+            
         saveInFirestoreAutoKey('offers/', this.state)
             .then((docRef) => {
-                
                     SaveInStorageByURL(`offers/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => { 
                         let json = {'images': data}
                         updateInFirestoreByKey(`offers/`,docRef.id, json)
                      })
-                
             })
             .catch(function (error) {
                 this.setState({
@@ -82,8 +81,8 @@ export default class AddOfferMainForm extends Component {
                             type="text"
                             value={this.state.title}
                             onChange={this.handleChange}
-                            minLength='10'
-                            maxLength="80"
+                            minLength='20'
+                            maxLength="120"
                             required
                             className="validate"
                         />

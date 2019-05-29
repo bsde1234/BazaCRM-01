@@ -37,18 +37,40 @@ export default class RecentOffers extends Component {
             return (
                 <div>
                     {offers.map((data, idx) => (
-                        <div key={idx} className="col l4 m6 s12 offerCardWrap">
-                        <Link to={{
-                            pathname: `/offerDetails/${data.id}`,
-                            search: '?sort=name',
-                            hash: '#the-hash',
- 
-                        }}> 
-                        <div className="offerContainer">
-                        <img src={data.images} className="responsive-img" width="100%" alt=""/>
-                            <p className="center-align">{data.title}</p> 
-                        </div>
-                        </Link>
+                        <div key={idx} className="col l12 m12 s12 offerCardWrap">
+                            <div>
+                                <div className="col s4 offerImages">
+                                    <Link to={{
+                                        pathname: `/offerDetails/${data.id}`,
+                                        search: '?sort=name',
+                                        hash: '#the-hash',
+                                    }}> 
+
+{ data.images
+? <>{data.images.map((image,idx) => <img src={image} key={idx}  className="responsive-img" />)}</>
+: <img src="https://firebasestorage.googleapis.com/v0/b/baza-001.appspot.com/o/system%2Foffer%2Fno_img.jpg?alt=media&token=858085c4-4e36-42d5-b909-cca5a4966ff0"  className="responsive-img" />
+
+}
+
+
+                                    </Link>
+                                </div>
+                                <div className="col s6 offerText">
+                                    <Link to={{
+                                        pathname: `/offerDetails/${data.id}`,
+                                        search: '?sort=name',
+                                        hash: '#the-hash',
+                                    }}> 
+                                        <h2>{data.title}</h2>
+                                    </Link>
+                                    <ul>
+                                        <li>{data.offer_type_1}</li>
+                                        <li></li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                                <div className="col s2 offerPrice">Price</div>
+                            </div>
                         </div>
                     ))}
                 </div>
