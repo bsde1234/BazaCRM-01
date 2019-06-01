@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "firebase": "^5.10.0",
-    "materialize-css": "^1.0.0-rc.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-imask": "^5.1.2",
+    "react-input-mask": "^2.0.4",
+    "react-materialize": "^3.3.1",
     "react-scripts": "3.0.0"
   },
   "scripts": {

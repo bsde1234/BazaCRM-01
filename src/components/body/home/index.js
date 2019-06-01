@@ -11,7 +11,7 @@ export default class Home extends React.Component {
         <h1>HOME</h1>
         <div id="recentOfferWrap">
           <div className="center-align "><h5>Recent Offers</h5></div>
-          <RecentOffers user={this.props.auth}  />
+          <RecentOffers user={this.props.auth} path="offers2"  />
         </div>
       </div>
     )

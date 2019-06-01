@@ -23,3 +23,7 @@ ul{
     margin: 0;
     padding: 0;
 }
+.noMarginPadding{
+    margin: 0 !important;
+    padding: 0 !important;
+}
