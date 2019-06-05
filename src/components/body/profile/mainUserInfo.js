@@ -78,8 +78,7 @@ export default class MainUserInfo extends Component {
   }
 
   deletePhoto() {
-    document.getElementById('file').value = '';
-    document.getElementById('imageWrap').innerHTML = '';
+    console.log(this.props.user.userInfo)
     let filePath = `files/images/users/${this.props.user.uid}/profilePic/${this.props.user.userInfo.userPic.name}`;
     DeleteFile(filePath).then(() => {
       const path = `users/`;
@@ -89,7 +88,9 @@ export default class MainUserInfo extends Component {
           modified: false,
           file: false,
           success: 'Picture deleted successfuly.'
-        })
+        });
+        document.getElementById('file').value = '';
+        document.getElementById('imageWrap').innerHTML = '';
       }).catch((error) => {
         ErrorHandler(error).then((text) => {
           this.setState({
@@ -121,7 +122,7 @@ export default class MainUserInfo extends Component {
     return (
       <div>
         <div className="row">
-          <div className="col s12 l4 center-align">
+          <div className="col s12   ">
             <input
               id="file"
               hidden
@@ -130,7 +131,7 @@ export default class MainUserInfo extends Component {
               type="file"
               accept="image/x-png,image/gif,image/jpeg"
             />
-            <button type="button" className="btn grey darken-3 btnblock" name="action" onClick={this.addPhoto} hidden={!file && userInfo.userPic.filePath === '' ? false : true}><i className="fas fa-portrait"></i> Add Photo
+            <button type="button" className="btn grey darken-3 btnblock" name="action" onClick={this.addPhoto} hidden={!file && userInfo.userPic.filePath === '' ? false : true}><i className="fas fa-portrait"></i> Добавить фото профиля 
               <i className="material-icons right"></i>
             </button>
             <div hidden={file || modified || userInfo.userPic.filePath!=='' ? false : true} className="center-align">
@@ -147,11 +148,11 @@ export default class MainUserInfo extends Component {
 
           </div>
 
-          <div className="col s12 l8">
+          <div className="col s12 l12">
             <ul >
-              <li><i className="fas fa-user"></i> Name: {userInfo.name}</li>
-              <li><i className="fas fa-envelope"></i> Email: {userInfo.email}</li>
-              <li><i className="fas fa-mobile-alt"></i>  Phone: {userInfo.phone}</li>
+              <li><i className="fas fa-user col s1"></i><span className="col s11">{userInfo.name}</span> </li>
+              <li><i className="fas fa-envelope col s1"></i><span className="col s11">{userInfo.email}</span></li>
+              <li><i className="fas fa-mobile-alt col s1"></i><span className="col s11">{userInfo.phone}</span></li>
             </ul>
           </div>
         </div>

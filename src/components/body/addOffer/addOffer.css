@@ -33,10 +33,20 @@
 .currency{
     padding-left: 10px !important;
 }
-.modal-content{
-    margin: 0 auto;
-    padding: 0 30px;
-}
+/* MODAL */
 #modal1{
     max-width: 400px;
+}
+#modal1 .modal-content{
+    margin: 0 auto;
+    padding: 20px 50px;
+}
+
+#modal1 .modal-close{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+#modal1 .modal-footer{
+    display: none;
 }

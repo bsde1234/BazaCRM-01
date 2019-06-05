@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './signUp.css';
 import { doCreateUserWithEmailAndPassword, sentVerifyUserEmail } from '../../firebase/fireAuthCRUD';
 import { ErrorHandler } from '../../system/errorHandler';
-import { IMaskInput } from 'react-imask';
+import InputMask from 'react-input-mask';
 import { saveInFirestoreByKey } from '../../firebase/firestoreCRUD';
 
 const INITIAL_STATE = {
@@ -71,7 +71,6 @@ class SignUpForm extends Component {
     const {
       name,
       email,
-      phone,
       passwordOne,
       passwordTwo,
       error,
@@ -91,38 +90,30 @@ class SignUpForm extends Component {
         <form hidden={success ? true : false} onSubmit={this.onSubmit} className="col s4 offset-s4">
           <div className="center-align"><h5>Регистрация</h5></div>
           <div className="input-field ">
-            <label htmlFor="name">Full Name<span className="red-text">*</span></label>
+            <label htmlFor="name">Полное имя<span className="red-text">*</span></label>
             <input
               id="name"
               name="name"
               value={name}
               onChange={this.onChange}
               type="text"
-
+              className="validate"
+              maxLength="80"
+              minLength="5"
             />
           </div>
-
+          <div className="input-field ">
           <label htmlFor="phone">Phone Number<span className="red-text">*</span></label>
-          <IMaskInput
-            mask={'+{38\\0}(00)000-00-00'}
-            lazy={false}
-            name="phone"
-            value={phone}
-            onAccept={(value, mask) => {
-              let data = { target: mask.el.input }
-              data.target.value = "+" + mask.unmaskedValue;
-              this.onChange(data)
-            }}
-          />
-
+          <InputMask name="phone" mask={'+380(99)999-99-99'} maskChar=" " onChange={this.onChange} />
+          </div>
           <div className="input-field ">
             <label htmlFor="email">Email Address<span className="red-text">*</span></label>
             <input
               id="email"
               name="email"
-              value={email}
               onChange={this.onChange}
-              type="text"
+              type="email"
+              className="validate"
             />
           </div>
 
@@ -131,7 +122,6 @@ class SignUpForm extends Component {
             <input
               id="passwordOne"
               name="passwordOne"
-              value={passwordOne}
               onChange={this.onChange}
               type="password"
             />
@@ -142,7 +132,6 @@ class SignUpForm extends Component {
             <input
               id="passwordTwo"
               name="passwordTwo"
-              value={passwordTwo}
               onChange={this.onChange}
               type="password"
             />

@@ -39,6 +39,7 @@ class App extends Component {
     this.listener();
   }
   render() {
+
     if(this.state.complete){
     return (
       <AuthUserContext.Provider value={this.state.authUser}>
@@ -47,7 +48,7 @@ class App extends Component {
             <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path='/' auth={this.state.authUser} component={Home} />
+                <Route exact path='/'  render={props => <Home auth={this.state.authUser} {...props} />}/>
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
                 <Route path='/dragndrop' component={DragNdrop} />
                 <AuthProtectedRoute path='/signUp' auth={this.state.authUser} component={SignUpForm} />
@@ -59,6 +60,7 @@ class App extends Component {
             </div>
           </div>
         </BrowserRouter>
+        
       </AuthUserContext.Provider>
     );
   }else return (

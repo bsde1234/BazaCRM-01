@@ -1,0 +1,73 @@
+#imageWrap{
+    margin: 10px 0;
+}
+
+#favOffers:before,#myOffers:before,
+.collapsible-header:before,
+.collapsible-header.active:before,
+#favOffersList:before
+{
+    font-family: 'Font Awesome\ 5 Free' !important;
+    font-weight: 900;
+    font-size: 22px;
+    line-height: normal;
+    margin: 0 10px;
+    transition: .4s;
+}
+
+#favOffers:before{
+    content: "\f005";
+    font-size: 14px;
+    margin-left: 9px;
+    margin-right: 9px;
+}
+#myOffers:before{
+    content: "\f46d";
+    font-size: 14px;
+    margin-left: 11px;
+    margin-right: 11px;
+}
+.collapsible-header:before{
+    content: "\f107";
+}
+.collapsible-header.active:before{
+    content: "\f107";
+    transform: rotate3d(1, 0, 0, 3rad);
+    transition: .4s;
+}
+
+.collapsible-item a {
+    border-bottom: 1px solid #ddd;
+    color: rgba(0,0,0,0.87);
+    display: block;
+    padding: 15px;
+    transition: .4s;
+
+}
+.collapsible-item a:hover,
+.collapsible-header:hover{
+    background-color: rgba(0,0,0,0.1);
+    transition: .4s;
+}
+#recentOffersList li{
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-left: 20px;
+}
+#recentOffersList .fas{
+    cursor: pointer;
+}
+#recentOffersList li a
+{
+    display: inline-block;
+    text-overflow: ellipsis !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 320px;
+    color: rgba(0,0,0,0.87)
+}
+#favOffersList:before{
+    content: "\f005";
+    transition: .4s;
+}

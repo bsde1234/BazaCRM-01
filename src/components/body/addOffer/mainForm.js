@@ -3,25 +3,29 @@ import M from "materialize-css";
 import DragNdrop from '../../system/dragNdrop';
 import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
-import { Button,Modal } from 'react-materialize';
+import { Button } from 'react-materialize';
 
 
 const INITIAL_STATE = {
-    title: '',
-    offer_type_1: '',
-    price: '',
-    currency: '',
-    description: '',
-    isInvalid: false,
-    data_created: new Date(),
-    approved: false,
-    error: '',
-    nameToSave: '',
-    saving: false,
+    offerInfo: {
+        title: '',
+        offer_type_1: '',
+        price: '',
+        currency: '$',
+        description: '',
+        data_created: '',
+        nameToSave: '',
+        approved: false,
+        uid:''
+    },
     system: {
+        finished: false,
+        saving: false,
+        isInvalid: false,
         Globalerror: '',
         successSubmited: false,
-        noImages: ''
+        noImages: '',
+        error: ''
     }
 
 };
@@ -40,14 +44,20 @@ export default class AddOfferMainForm extends Component {
         this.numberValidate = this.numberValidate.bind(this);
         this.saveInStorage = this.saveInStorage.bind(this);
         this.submitToStorage = this.submitToStorage.bind(this);
-        
+
     }
 
     handleChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
+        let info = Object.assign({}, this.state.offerInfo);    //creating copy of object
+        info[event.target.name] = event.target.value;                        //updating value
+        this.setState({ offerInfo: info });
+        console.log(this.state)
     }
-    numberValidate(event){
-           this.setState({price: Number(event.target.value).toLocaleString()})
+    numberValidate(event) {
+        let field = Object.assign({}, this.state.offerInfo);    //creating copy of object
+        field[event.target.name] = Number(event.target.value).toLocaleString()                      //updating value
+        this.setState({ offerInfo: field });
+
     }
     handleSubmit(event) {
         event.preventDefault();
@@ -59,30 +69,42 @@ export default class AddOfferMainForm extends Component {
             this.setState({ system });
         }
     }
-    saveInStorage(){
-        if(this.state.nameToSave && this.state.saving){
+    saveInStorage(event) {
+        this.setState({system:{saving:true}})
+        if (this.state.offerInfo.title) {
             this.submitToStorage('savedOffers');
         } else {
-            this.setState({
-                saving: true
-            })
+            let t = document.getElementById('title');
+           if(!t.checkValidity()){t.classList.add("invalid")}
+
         }
 
     }
-    submitToStorage(path){
-        saveInFirestoreAutoKey(`${path}/`, this.state)
-        .then((docRef) => {
-            if(this.images.length !== 0){
-                SaveInStorageByURL(`${path}/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => {
-                    let json = { 'images': data }
-                    updateInFirestoreByKey(`${path}/`, docRef.id, json)
+    submitToStorage(path) {
+        const data = this.state.offerInfo;
+        data.data_created = new Date();
+        data.uid = this.props.user.uid;
+        saveInFirestoreAutoKey(`${path}/`, data)
+            .then((docRef) => {
+                if (this.images.length !== 0) {
+                    SaveInStorageByURL(`${path}/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => {
+                        let json = { 'images': data }
+                        updateInFirestoreByKey(`${path}/`, docRef.id, json)
+                    }).then(() => {
+                        this.setState({
+                            system: { finished: true }
+                        })
+                    })
+                } else {
+                    this.setState({
+                        system: { finished: true }
+                    });
+                }
+            }).catch((error) => {
+                this.setState({
+                    error: error.massage
                 })
-            }
-        }).catch( (error)=> {
-            this.setState({
-                error: error.massage
             })
-        });
     }
     addImagesHandler(images) {
         this.images = images;
@@ -94,76 +116,70 @@ export default class AddOfferMainForm extends Component {
     }
 
     render() {
-        const { system,saving } = this.state
+        const { system, offerInfo } = this.state
         return (
             <>
-                <form onSubmit={this.handleSubmit} className="col s6 offset-s3 ">
-
-
-                    <div className="input-field row withoutPadding">
-                        <input type="text" required name="title" onChange={this.handleChange} minLength={10} maxLength="80"  className="validate col s12" />
-                        <label htmlFor="last_name" tooltip="I am a tooltip"><Button tooltip="Мин. длинна: 10 символов.<br>Макс. длинна: 80 символов." className="btnTooltip" tooltipoptions={{ position: 'top' }}>?</Button>Заголовок<span className="red-text">*</span></label>
+                {system.finished ?
+                    <div className="center-align green-text">
+                    <br/><br/>
+                        <h5 >Ваше обьявление успешно отправленно на проверку. <i className="far fa-check-circle "></i></h5>
                     </div>
+                    :   
+                    
+                    <form onSubmit={this.handleSubmit} >
+                        <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
+                        <div className="input-field row withoutPadding">
+                            <input type="text" id="title" required name="title" onChange={this.handleChange} minLength={10} maxLength="80" className="validate col s12" />
+                            <label htmlFor="title"><Button tooltip="Мин. длинна: 10 символов.<br>Макс. длинна: 80 символов." className="btnTooltip" tooltipoptions={{ position: 'top' }}>?</Button>Заголовок<span className="red-text">*</span></label>
+                        </div>
 
-                    <div className="input-field row withoutPadding">
-                        <select value={this.state.offer_type_1}  className=" validate col s12" id="offer_type_1" name="offer_type_1" onChange={this.handleChange} >
-                            <option value="" disabled defaultValue  >Веберите</option>
-                            <option value="Дом">Дом</option>
-                            <option value="Участок">Участок</option>
-                            <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
-                        </select>
-                        <label htmlFor="offer_type_1">Тип Недвижимости<span className="red-text">*</span></label>
-                    </div>
+                        <div className="input-field row withoutPadding">
+                            <select className=" validate col s12" id="offerType" name="offer_type_1" onChange={this.handleChange} >
+                                <option value="" defaultValue  >Веберите</option>
+                                <option value="Дом">Дом</option>
+                                <option value="Участок">Участок</option>
+                                <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
+                            </select>
+                            <label htmlFor="offerType">Тип Недвижимости<span className="red-text">*</span></label>
+                        </div>
 
-                    <div className="row withoutPadding">
+                        <div className="row withoutPadding">
 
-                    <div className="input-field col s10 noMarginPadding">
-                        <input  className="validate" type="number" pattern="[0-9]*" inputMode="numeric"  required onChange={this.numberValidate}   />
-                        <label htmlFor="price" >Цена<span className="red-text">*</span></label>
-                    </div>
+                            <div className="input-field col s10 noMarginPadding">
+                                <input className="validate" type="number" id="price" name="price" pattern="[0-9]*" inputMode="numeric" required onChange={this.numberValidate} />
+                                <label htmlFor="price" >Цена<span className="red-text">*</span></label>
+                            </div>
 
-                    <div className=" input-field col s2 noMarginPadding currency">
-                        <select id="currency"    className="validate col s1" name="currency" onChange={this.handleChange}  >
-                        <option value="" disabled defaultValue  >Веберите</option>
-                            <option value="$">$</option>
-                            <option value="Грн">Грн</option>
-                            <option value="€">€</option>
-                        </select>
-                        <label htmlFor="currency">Валюта<span className="red-text">*</span></label>
-                    </div>
-                </div>
+                            <div className=" input-field col s2 noMarginPadding currency">
+                                <select id="currency" className="validate col s1" name="currency" onChange={this.handleChange}  >
+                                    <option value="$" defaultValue>$</option>
+                                    <option value="Грн">Грн</option>
+                                    <option value="€">€</option>
+                                </select>
 
-                <div className="input-field row withoutPadding">
-                        <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="description" className="materialize-textarea validate  s12"></textarea>
-                        <label htmlFor="textarea2">Описание<span className="red-text">*</span></label>
-                        <span hidden={this.state.description.length !== 0?false:true} className="right">{this.state.description.length} / 800</span>
-                </div>
+                            </div>
+                        </div>
 
+                        <div className="input-field row withoutPadding">
+                            <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="description" className="materialize-textarea validate  s12"></textarea>
+                            <label htmlFor="textarea2">Описание<span className="red-text">*</span></label>
+                            <span hidden={offerInfo.description.length !== 0 ? false : true} className="right">{offerInfo.description.length} / 800</span>
+                        </div>
 
+                        <div>
+                            <DragNdrop addImage={this.addImagesHandler} required={true} error={system.noImages} />
 
-                    <div>
-                        <DragNdrop addImage={this.addImagesHandler} required={true} error={system.noImages} />
+                        </div>
+                        {system.saving && offerInfo.title.length<10?<div className="red-text center-align">Пожалуйста заполните поле "Заголовок".<br/><br/></div>:''}
+                        <button className="waves-effect waves-light btn-small left" onClick={this.saveInStorage}  type="button">
+                            Сохранить
+                        </button>
 
-                    </div>
-                    <button className="waves-effect waves-light btn-small modal-trigger" disabled={this.state.isInvalid} href="#modal1" type="button">
-                        Сохранить
-                    </button>
-                        <button className="waves-effect waves-light btn-small " disabled={this.state.isInvalid} type="submit">
+                        <button className="waves-effect waves-light btn-small right" type="submit">
                             Опубликовать
-                    </button>
-                    <div className="test"></div>
-             </form>
-             <div className="col s6">
-                <Modal id="modal1">
-                <div className="input-field col s6 withoutPadding">
-                        <input type="text" required name="nameToSave" onChange={this.handleChange} minLength={10} maxLength="80"  className="validate col s12" />
-                        <label tooltip="I am a tooltip"><Button tooltip="Мин. длинна: 10 символов.<br>Макс. длинна: 80 символов." className="btnTooltip" tooltipoptions={{ position: 'top' }}>?</Button>Название формы<span className="red-text">*</span></label>
-                        {this.state.nameToSave}
-                    </div>
-                </Modal>
-             </div>
-
-
+                        </button>
+                    </form>
+                }
             </>
         );
     }

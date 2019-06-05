@@ -1,48 +1,60 @@
 import React, { Component } from 'react'
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import MainUserInfo from './mainUserInfo';
-import {  dataSnapshot } from './../../firebase/firestoreCRUD/';
-import { Preloader } from '../../system/preloader';
+import { getDataByKey } from './../../firebase/firestoreCRUD/';
+import './profile.css';
+import { Collapsible, CollapsibleItem, Preloader } from 'react-materialize';
+import SavedOffers from './savedOffers';
+
 
 
 export default class Profile extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state ={
-      uid: this.props.auth.uid,
+    this.state = {
       complete: false
     };
 
-    dataSnapshot('users/', this.props.auth.uid).onSnapshot(data => {
+  }
+
+  componentDidMount() {
+    const uid = this.props.auth.uid;
+    getDataByKey('users/', uid).then((userInfo) => {
+      userInfo.uid = uid
       this.setState({
-        ...data.data(),
+        userInfo,
         complete: true
       })
-    });
-    
+    }).then(()=>{
+    }).catch(error=>{console.log("ERROR", error)})
   }
   render() {
+    const  userInfo  = this.state;
     return (
       <div className="row">
-        <div className="col s12 m8 l8 left">
+        <div className="col s12 m6 l6 left">
           <div className="center-align"><h5><i className="far fa-address-card"></i> Информация о пользователе</h5></div>
-          <br/>
-          {!this.state.complete?
-            <Preloader /> :
-            <MainUserInfo user={this.state} hidden={this.state.complete?true:true}/>
+
+          {!this.state.complete ?
+            <div className="center-align">
+              <Preloader size="big" />
+            </div>
+            :
+            <MainUserInfo user={userInfo.userInfo} hidden={this.state.complete ? true : true} />
           }
         </div>
-        
-        <div className="col s12 m4 l4 right">
-        <div className="center-align"><h5><i className="far fa-address-card"></i> Допольнительные функции</h5></div>
-          <br/>
-          <ul className="collection">
-            <li className="collection-item"><Link to="/favAd">Избранные обьявления</Link></li>
-            <li className="collection-item">Alvin</li>
-            <li className="collection-item">Alvin</li>
-            <li className="collection-item">Alvin</li>
-          </ul>
+        <div className="col s12 m6 l6 right">
+          <div className="center-align"><h5><i className="far fa-address-card"></i> Допольнительная информация</h5></div>
+
+          <Collapsible >
+            <div className="collapsible-item"><Link to="/myoffers" id="myOffers">Мои обьявления</Link></div>
+            <div className="collapsible-item"><Link to="/favAd" id="favOffers">Избранные обьявления</Link> </div>
+            <CollapsibleItem header="Cохраненные обьявления" >
+            <SavedOffers uid={this.props.auth.uid}></SavedOffers>
+            </CollapsibleItem>
+          </Collapsible>
+
         </div>
       </div>
     )

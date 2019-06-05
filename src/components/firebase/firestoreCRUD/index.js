@@ -1,8 +1,14 @@
 import 'firebase/firestore';
 import firebase from './../../system/fireConfig';
 
-export function getDataByKey(collection, key) {
 
+
+export function saveInFirestoreByKey(collection, key, data) {
+    return firebase.firestore().collection(collection).doc(key).set({
+        ...data
+    })
+}
+export function getDataByKey(collection, key) {
     var docRef = firebase.firestore().collection(collection).doc(key);
     return docRef.get().then(function (doc) {
         if (doc.exists) {
@@ -18,15 +24,13 @@ export function dataSnapshot(collection, key) {
     return firebase.firestore().collection(collection).doc(key)
 }
 
-export function getCollection(collection) {
-   return firebase.firestore().collection(collection).where('approved', '==', false).limit(9).orderBy("data_created", "desc").get()
+export function getOfferCollection(collection) {
+   return firebase.firestore().collection(collection).where('approved', '==', false).limit(30).orderBy("data_created", "desc").get()
 }
+export function getSavedOffers( uid) {
+    return firebase.firestore().collection('savedOffers').where('uid', '==', uid).orderBy("data_created", "desc").get()
+ }
 
-export function saveInFirestoreByKey(collection, key, data) {
-    return firebase.firestore().collection(collection).doc(key).set({
-        ...data
-    })
-}
 export function saveInFirestoreAutoKey(collection,data){
     // Add a new document with a generated id.
     return firebase.firestore().collection(collection).add({
@@ -42,11 +46,21 @@ export function updateInFirestoreByKey( collection, key, data) {
     }
 }
 export function deleteInFirestoreByKey(collection, key) {
-    firebase.firestore().collection(collection).doc(key).delete()
+    return firebase.firestore().collection(collection).doc(key).delete()
     .then(() => {
         console.log("Document successfully deleted!");
     })
     .catch(function (error) {
         console.error("Error removing document: ", error);
+    });
+}
+export function updateFireStoreArray(collection, key, arrayName, data) {
+    return firebase.firestore().collection(collection).doc(key).update({
+        [arrayName]: firebase.firestore.FieldValue.arrayUnion(data)
+    });
+}
+export function deleteFireStoreArrayVal(collection, key, arrayName, data) {
+    return firebase.firestore().collection(collection).doc(key).update({
+        [arrayName]: firebase.firestore.FieldValue.arrayRemove(data)
     });
 }

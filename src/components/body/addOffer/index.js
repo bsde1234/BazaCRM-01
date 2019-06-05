@@ -23,11 +23,12 @@ export default class AddOfferIndex extends Component {
     return (
       <div className="">
         <div className="col s12 ">
-          <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
-          <br/>
           {!this.state.complete?
             <Preloader /> :
-            <AddOfferMainForm user={this.props.auth} hidden={this.state.complete?true:true}/>
+            <div className="col s12 m8 l6 offset-m2  offset-l3 ">
+              <AddOfferMainForm user={this.props.auth} hidden={this.state.complete?true:true}/>
+            </div>
+
           }
         </div>
       </div>

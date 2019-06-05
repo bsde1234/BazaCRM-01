@@ -1,40 +1,85 @@
 import React, { Component } from 'react'
-import { getCollection } from '../../firebase/firestoreCRUD';
+import { getOfferCollection, dataSnapshot } from '../../firebase/firestoreCRUD';
 import { Preloader } from '../../system/preloader';
 import { Link } from 'react-router-dom';
 import { Carousel } from 'react-materialize';
+import FavoriteOffers from '../../system/favoriteOffers';
 
 export default class RecentOffers extends Component {
 
-    state = {
-        offers: [],
-        error: '',
-        loaded: false
-    }
-    componentWillMount() {
-        let offers = [];
-        if (this.props.path) {
-            getCollection(this.props.path).then((querySnapshot) => {
-                querySnapshot.forEach((offer) => {
+    constructor(props) {
+        super(props);
+        this.state = {
+            offers: [],
+            error: '',
+            loaded: false
+        }
 
+        this.getData();
+    }
+    /*
+        componentWillMount() {
+            let offers = [];
+            if (this.props.path) {
+                getOfferCollection(this.props.path).then((querySnapshot) => {
+                    querySnapshot.forEach((offer) => {
+                        let data = offer.data()
+                        data.id = offer.id
+                        offers.push(data)
+                    })
+                }).then(() => {
+                    dataSnapshot(`favOffers`, this.props.auth.uid).onSnapshot((doc)=> {
+                        this.setState({
+                            offers,
+                            loaded: true,
+                            ...doc.data()
+                        })
+                   })
+                    
+                }).catch(error => {
+                    this.setState({
+                        loaded: true
+                    })
+                })
+            }
+        }
+    */
+   getOfferCollection() {
+        let offers = [];
+        return new Promise(resolve => {
+            getOfferCollection(this.props.path).then((querySnapshot) => {
+                querySnapshot.forEach((offer) => {
                     let data = offer.data()
                     data.id = offer.id
                     offers.push(data)
+                    resolve(offers);
                 })
-            }).then(() => {
-                this.setState({
-                    offers,
-                    loaded: false
-                })
-            }).catch(error=>{console.log(error);
-            this.setState({
-                loaded : true
-            })})
-        } 
+            })
+        })
     }
+    getFavItems() {
+        return new Promise(resolve => {
+            dataSnapshot(`favOffers`, this.props.auth.uid).onSnapshot((doc)=> {
+                resolve(doc.data());
+           })
+        })
+    }
+    async  getData() {
+        const offers = await this.getOfferCollection();
+        const favOffers = await this.getFavItems();
+        this.setState({
+            offers,
+            favOffers: favOffers["offerID"]
+        })
+
+    }
+
+
+
+
     render() {
 
-        const { offers, loaded } = this.state
+        const { offers, loaded } = this.state;
         if (offers.length > 0) {
             return (
                 <div>
@@ -44,9 +89,6 @@ export default class RecentOffers extends Component {
                             <div>
                                 <div className="col s4 offerImages noMarginPadding">
                                     {data.images.length <= 1 ? <img src={data.images[0]} alt='' /> : <Carousel images={data.images} options={{ fullWidth: true, dist: 15, indicators: true, noWrap: true, padding: 10 }} />}
-
-
-
                                 </div>
                                 <div className="col s6 offerText">
                                     <Link to={{
@@ -62,8 +104,9 @@ export default class RecentOffers extends Component {
                                         <li></li>
                                     </ul>
                                 </div>
-                                <div className="col s2 offerPrice">
-                                    Цена: {Number(data.price).toLocaleString()}
+                                <div className="col s2 offerPrice center-align">
+                                    <div className="addFav "><i className="fas fa-star "></i><FavoriteOffers  uid={this.props.auth.uid} offerId={data.id} offersList={this.state.favOffers}/></div>
+                                    <div className="offerPrice">{data.price + " " + data.currency}</div>
                                 </div>
                             </div>
                         </div>
@@ -74,9 +117,7 @@ export default class RecentOffers extends Component {
         } else {
             return (
                 <>
-                    
-                    {loaded?<div className="center-align red-text"><h5>No records found.</h5></div>:<Preloader  />}
-                    
+                    {loaded ? <div className="center-align red-text"><h5>No records found.</h5></div> : <Preloader />}
                 </>
             )
         }
