@@ -33,3 +33,18 @@ ul{
     width: 100%;
     bottom: 0px;
 }
+
+.far.inherit{
+    font-weight: bold !important;
+}
+.fas.inherit{
+    font-weight: 400 !important;
+}
+.datePicker > div.col {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.hideHelperText .helper-text {
+    display: none !important;
+}

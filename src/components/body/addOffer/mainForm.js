@@ -4,6 +4,7 @@ import DragNdrop from '../../system/dragNdrop';
 import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
 import { Button } from 'react-materialize';
+import MapView from '../../system/MapView';
 
 
 const INITIAL_STATE = {
@@ -44,7 +45,7 @@ export default class AddOfferMainForm extends Component {
         this.numberValidate = this.numberValidate.bind(this);
         this.saveInStorage = this.saveInStorage.bind(this);
         this.submitToStorage = this.submitToStorage.bind(this);
-
+        
     }
 
     handleChange(event) {
@@ -178,7 +179,17 @@ export default class AddOfferMainForm extends Component {
                         <button className="waves-effect waves-light btn-small right" type="submit">
                             Опубликовать
                         </button>
+                    <div>
+                    <MapView
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVx04MozqTwq0ikjuernD5cuubbM6UQSM&v=3.exp&libraries=geometry,drawing,places"
+                        loadingElement={<div style={{width:`100%`, height: `100%` }} />}
+                        containerElement={<div style={{width:`100%`, height: `400px` }} />}
+                        mapElement={<div style={{width:`100%`, height: `100%` }} />}
+                    />
+                    </div>
                     </form>
+                     
+                    
                 }
             </>
         );

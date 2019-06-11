@@ -3,8 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/navigation';
 import Home from './components/body/home';
-import SignUpForm from './components/auth/signUp';
-import SignInForm from './components/auth/signIn';
+import Authentication from './components/auth/authentication/';
 import firebase from './components/system/fireConfig'
 import { AuthUserContext } from './components/auth/session';
 import PasswordForgetForm from './components/auth/forgetPassword';
@@ -51,8 +50,7 @@ class App extends Component {
                 <Route exact path='/'  render={props => <Home auth={this.state.authUser} {...props} />}/>
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
                 <Route path='/dragndrop' component={DragNdrop} />
-                <AuthProtectedRoute path='/signUp' auth={this.state.authUser} component={SignUpForm} />
-                <AuthProtectedRoute path='/signIn' auth={this.state.authUser} component={SignInForm} />
+                <AuthProtectedRoute path='/authentication' auth={this.state.authUser} component={Authentication} />
                 <AuthProtectedRoute path='/forgetPassword' component={PasswordForgetForm} />
                 <PrivateRoute path="/profile" auth={this.state.authUser}  component={Profile} />
                 <Route component={PageNotFound} />

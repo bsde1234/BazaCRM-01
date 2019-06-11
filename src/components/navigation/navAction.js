@@ -14,8 +14,7 @@ export const NavAction = (props) => {
                         <li><NavLink activeClassName="activeLink" exact to='/addoffer'><i className="fas fa-plus" ></i> Add New Offer</NavLink></li>
                         <li><NavLink to='/dragndrop'>Dran&Drop</NavLink></li>
                         <li><NavLink activeClassName="activeLink" exact to='/testCompWrap'>testCompWrap</NavLink></li>
-                        <li hidden={props.auth ? true : false}><NavLink to='/signUp'>Sign Up</NavLink></li>
-                        <li hidden={props.auth ? true : false}><NavLink to='/signIn'>Sign In</NavLink></li>
+                        <li hidden={props.auth ? true : false}><NavLink to='/authentication'>Регистрация/Вход</NavLink></li>
                         <li className="navUserInfo" hidden={props.auth ? false : true}><NavLink to='/profile'>{props.auth && props.auth.displayName ? props.auth.displayName : 'Profile'}</NavLink></li>
                         <li hidden={props.auth ? false : true} onClick={doSignOut} className="red-text"><i style={{fontSize: '15px'}} className="fas fa-sign-out-alt"></i> Log Out</li>
                     </ul>
