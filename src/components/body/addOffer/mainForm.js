@@ -4,20 +4,12 @@ import DragNdrop from '../../system/dragNdrop';
 import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
 import { Button } from 'react-materialize';
-import MapView from '../../system/MapView';
-
+import MyFancyComponent from '../../system/mapView';
 
 const INITIAL_STATE = {
     offerInfo: {
-        title: '',
-        offer_type_1: '',
-        price: '',
-        currency: '$',
-        description: '',
-        data_created: '',
-        nameToSave: '',
         approved: false,
-        uid:''
+        uid: ''
     },
     system: {
         finished: false,
@@ -45,14 +37,13 @@ export default class AddOfferMainForm extends Component {
         this.numberValidate = this.numberValidate.bind(this);
         this.saveInStorage = this.saveInStorage.bind(this);
         this.submitToStorage = this.submitToStorage.bind(this);
-        
     }
 
     handleChange(event) {
         let info = Object.assign({}, this.state.offerInfo);    //creating copy of object
         info[event.target.name] = event.target.value;                        //updating value
         this.setState({ offerInfo: info });
-        console.log(this.state)
+
     }
     numberValidate(event) {
         let field = Object.assign({}, this.state.offerInfo);    //creating copy of object
@@ -71,12 +62,12 @@ export default class AddOfferMainForm extends Component {
         }
     }
     saveInStorage(event) {
-        this.setState({system:{saving:true}})
+        this.setState({ system: { saving: true } })
         if (this.state.offerInfo.title) {
             this.submitToStorage('savedOffers');
         } else {
             let t = document.getElementById('title');
-           if(!t.checkValidity()){t.classList.add("invalid")}
+            if (!t.checkValidity()) { t.classList.add("invalid") }
 
         }
 
@@ -121,75 +112,74 @@ export default class AddOfferMainForm extends Component {
         return (
             <>
                 {system.finished ?
-                    <div className="center-align green-text">
-                    <br/><br/>
-                        <h5 >Ваше обьявление успешно отправленно на проверку. <i className="far fa-check-circle "></i></h5>
+                    <div className="col s12 m8 l6 offset-m2 offset-l3 ">
+                        <div className="center-align green-text ">
+                            <br /><br />
+                            <h5 >Ваше обьявление успешно отправленно на проверку. <i className="far fa-check-circle "></i></h5>
+                        </div>
                     </div>
-                    :   
-                    
-                    <form onSubmit={this.handleSubmit} >
-                        <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
-                        <div className="input-field row withoutPadding">
-                            <input type="text" id="title" required name="title" onChange={this.handleChange} minLength={10} maxLength="80" className="validate col s12" />
-                            <label htmlFor="title"><Button tooltip="Мин. длинна: 10 символов.<br>Макс. длинна: 80 символов." className="btnTooltip" tooltipoptions={{ position: 'top' }}>?</Button>Заголовок<span className="red-text">*</span></label>
-                        </div>
+                    :
+                    <>
+                        <form onSubmit={this.handleSubmit} >
+                            <div className="col s12 m8 l6 offset-m2  offset-l3 ">
+                                <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
+                                <div className="input-field row withoutPadding">
+                                    <input type="text" id="title" required name="title" onChange={this.handleChange} minLength={10} maxLength="80" className="validate col s12" />
+                                    <label htmlFor="title"><Button tooltip="Мин. длинна: 10 символов.<br>Макс. длинна: 80 символов." className="btnTooltip" tooltipoptions={{ position: 'top' }}>?</Button>Заголовок<span className="red-text">*</span></label>
+                                </div>
+                                <div className="input-field row withoutPadding">
+                                    <select className=" validate col s12" id="offerType" name="offer_type_1" onChange={this.handleChange} >
+                                        <option value="" defaultValue  >Веберите</option>
+                                        <option value="Дом">Дом</option>
+                                        <option value="Участок">Участок</option>
+                                        <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
+                                    </select>
+                                    <label htmlFor="offerType">Тип Недвижимости<span className="red-text">*</span></label>
+                                </div>
 
-                        <div className="input-field row withoutPadding">
-                            <select className=" validate col s12" id="offerType" name="offer_type_1" onChange={this.handleChange} >
-                                <option value="" defaultValue  >Веберите</option>
-                                <option value="Дом">Дом</option>
-                                <option value="Участок">Участок</option>
-                                <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
-                            </select>
-                            <label htmlFor="offerType">Тип Недвижимости<span className="red-text">*</span></label>
-                        </div>
+                                <div className="row withoutPadding">
 
-                        <div className="row withoutPadding">
+                                    <div className="input-field col s10 noMarginPadding">
+                                        <input className="validate" type="number" id="price" name="price" pattern="[0-9]*" inputMode="numeric" required onChange={this.numberValidate} />
+                                        <label htmlFor="price" >Цена<span className="red-text">*</span></label>
+                                    </div>
 
-                            <div className="input-field col s10 noMarginPadding">
-                                <input className="validate" type="number" id="price" name="price" pattern="[0-9]*" inputMode="numeric" required onChange={this.numberValidate} />
-                                <label htmlFor="price" >Цена<span className="red-text">*</span></label>
+                                    <div className=" input-field col s2 noMarginPadding currency">
+                                        <select id="currency" className="validate col s1" name="currency" onChange={this.handleChange}  >
+                                            <option value="$" defaultValue>$</option>
+                                            <option value="Грн">Грн</option>
+                                            <option value="€">€</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div className="input-field row withoutPadding">
+                                    <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="description" className="materialize-textarea validate  s12"></textarea>
+                                    <label htmlFor="textarea2">Описание<span className="red-text">*</span></label>
+                                    <span hidden={offerInfo.description && offerInfo.description.length !== 0 ? false : true} className="right">{offerInfo.description ? offerInfo.description.length : 0} / 800</span>
+                                </div>
+
+                                <div>
+                                    <DragNdrop addImage={this.addImagesHandler} required={true} error={system.noImages} />
+                                </div>
                             </div>
-
-                            <div className=" input-field col s2 noMarginPadding currency">
-                                <select id="currency" className="validate col s1" name="currency" onChange={this.handleChange}  >
-                                    <option value="$" defaultValue>$</option>
-                                    <option value="Грн">Грн</option>
-                                    <option value="€">€</option>
-                                </select>
-
+                            <div id="mapWrap">
+                                <MyFancyComponent />
                             </div>
-                        </div>
+                            <div className="col s12 m8 l6 offset-m2  offset-l3 ">
+                                {system.saving && offerInfo.title.length < 10 ? <div className="red-text center-align">Пожалуйста заполните поле "Заголовок".<br /><br /></div> : ''}
+                                <button className="waves-effect waves-light btn-small left" onClick={this.saveInStorage} type="button">
+                                    Сохранить
+                                </button>
 
-                        <div className="input-field row withoutPadding">
-                            <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="description" className="materialize-textarea validate  s12"></textarea>
-                            <label htmlFor="textarea2">Описание<span className="red-text">*</span></label>
-                            <span hidden={offerInfo.description.length !== 0 ? false : true} className="right">{offerInfo.description.length} / 800</span>
-                        </div>
+                                <button className="waves-effect waves-light btn-small right" type="submit">
+                                    Опубликовать
+                                </button>
+                            </div>
+                        </form>
 
-                        <div>
-                            <DragNdrop addImage={this.addImagesHandler} required={true} error={system.noImages} />
-
-                        </div>
-                        {system.saving && offerInfo.title.length<10?<div className="red-text center-align">Пожалуйста заполните поле "Заголовок".<br/><br/></div>:''}
-                        <button className="waves-effect waves-light btn-small left" onClick={this.saveInStorage}  type="button">
-                            Сохранить
-                        </button>
-
-                        <button className="waves-effect waves-light btn-small right" type="submit">
-                            Опубликовать
-                        </button>
-                    <div>
-                    <MapView
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVx04MozqTwq0ikjuernD5cuubbM6UQSM&v=3.exp&libraries=geometry,drawing,places"
-                        loadingElement={<div style={{width:`100%`, height: `100%` }} />}
-                        containerElement={<div style={{width:`100%`, height: `400px` }} />}
-                        mapElement={<div style={{width:`100%`, height: `100%` }} />}
-                    />
-                    </div>
-                    </form>
-                     
-                    
+                    </>
                 }
             </>
         );
