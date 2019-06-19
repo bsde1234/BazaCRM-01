@@ -12,41 +12,53 @@ const MapSearchBox = compose(
     lifecycle({
         componentWillMount() {
             const refs = {}
-
             this.setState({
                 places: [],
                 onSearchBoxMounted: ref => {
                     refs.searchBox = ref;
                 },
                 onPlacesChanged: () => {
+                    let idx = 0;
                     const places = refs.searchBox.getPlaces();
-                    // CHECK IF UA
-                    this.props.returnPlace(refs.searchBox.getPlaces());
-                    this.setState({
-                        places,
-                    });
+                    for(let el of places["0"].address_components){
+                        let type = el.types["0"];
+                        if( type=== "sublocality_level_1" || type === "route"){ 
+                            this.props.returnPlace(refs.searchBox.getPlaces());
+                            this.setState({
+                                places,
+                                error: false,
+                                success: true
+                            });
+                            break;
+                        } else { 
+                            idx++;
+                            if(idx === places["0"].address_components.length){
+                                this.setState({
+                                    error: true
+                                })
+                            }
+                        }
+                    }
                 },
-                onChange: e=>{
-                    this.setState({
-                        searchVal: e.target.value
-                    })
-                }
             })
         },
     }),
     withScriptjs
 )(props =>
-    <div data-standalone-searchbox="">
-            <h6 className="center-align">Местоположение обьекта</h6>
+    <div >
+        
+        <h6 className="center-align"><i className="fas fa-search-location"></i> Местоположение обьекта</h6>
         <StandaloneSearchBox
             ref={props.onSearchBoxMounted}
             bounds={props.bounds}
             onPlacesChanged={props.onPlacesChanged}
         >
             <div className="input-field ">
-                <i className="material-icons prefix fas fa-search-location " style={{fontSize:`23px`,textAlign: `center`}}></i>
-                <input  placeholder="Поиск адресса" type="text" className="validate"/>
+                <input placeholder="Выберите вариант из выпадающего списка" className={`${props.error&&"invalid"} ${props.success&&'valid'}`} id="mapSearchInput" name="mapSearchInput" />
+                <label htmlFor="mapSearchInput" className="active">Адресс обьекта<span className="red-text">*</span></label>
+                {props.error?<div className={`center-align red-text ${props.error&&"invalid"}`}>Укажите более точный адресс.</div>:''}
             </div>
+
         </StandaloneSearchBox>
     </div>
 );

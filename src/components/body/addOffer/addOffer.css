@@ -2,6 +2,9 @@
     display: flex;
     align-items: center;
 }
+.noPadding{
+    padding: 0 !important;
+}
 
 .helper-text{
     font-family: 'Font Awesome\ 5 Free' !important;
@@ -26,12 +29,19 @@
 .btnTooltip:hover {
     background-color: #424242;
 }
-
+.squareFields, .squareFields .input-field{
+    margin: 25px 0 0 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+}
 .input-field {
-    margin: 25px 0;
+    margin: 25px 0px 0 0
 }
 .currency{
-    padding-left: 10px !important;
+    padding-right: 20px !important;
 }
 /* MODAL */
 #modal1{

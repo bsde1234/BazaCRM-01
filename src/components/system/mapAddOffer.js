@@ -3,7 +3,7 @@ import MapSearchBox from './mapSearchBox';
 import MyMapComponent from './googleMap';
 import { MapPointerSwitcher } from './mapPointerSwitcher';
 
-export default class MyFancyComponent extends React.PureComponent {
+export default class MapAddOffer extends React.PureComponent {
   state = {
     isMarkerShown: false,
     location:{
@@ -28,6 +28,7 @@ export default class MyFancyComponent extends React.PureComponent {
     this.delayedShowMarker()
   }
   getPlace = (place) => {
+    console.log(place)
     this.setState({
       location:{
         lat: place["0"].geometry.location.lat(),
@@ -42,14 +43,13 @@ export default class MyFancyComponent extends React.PureComponent {
     }));
   }
   render() {
-    const {location, successSearch} = this.state;
     return (
       <>
-        <div className="col s6 offset-s3 center-align">
+        <div className="col l6 m6 s12 offset-l3 offset-m3 center-align">
           <MapSearchBox returnPlace={this.getPlace} />
-          {successSearch?<MapPointerSwitcher value="1" withGap onChange={this.switchMapPointer} options={[{label: 'Точное',value: '1'},{label: 'Приблезительное',value: '2'}]} />:''}
+          {this.state.successSearch?<MapPointerSwitcher value="1"  onChange={this.switchMapPointer} options={[{label: 'Точное',value: '1'},{label: 'Приблезительное',value: '2'}]} />:''}
         </div>
-        {successSearch?
+        {this.state.successSearch?
                   <div className="col s12">
                   <MyMapComponent
                     isMarkerShown={this.state.isMarkerShown}
