@@ -33,6 +33,7 @@ export function getSavedOffers( uid) {
 
 export function saveInFirestoreAutoKey(collection,data){
     // Add a new document with a generated id.
+    data.data_created = firebase.firestore.FieldValue.serverTimestamp() 
     return firebase.firestore().collection(collection).add({
         ...data
     })

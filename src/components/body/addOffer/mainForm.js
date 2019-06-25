@@ -3,7 +3,7 @@ import M from "materialize-css";
 import DragNdrop from '../../system/dragNdrop';
 import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
-import { Button } from 'react-materialize';
+import { Button  } from 'react-materialize';
 import MapAddOffer from '../../system/mapAddOffer';
 import HousesRentForm from './fieldsForm/houses_RENT';
 
@@ -11,8 +11,8 @@ const INITIAL_STATE = {
     offerInfo: {
         title: '',
         offer_type_1: '',
-        currency:'$',
-        level:0,
+        currency: '$',
+        level: 0,
         approved: false,
         uid: ''
 
@@ -37,43 +37,39 @@ export default class AddOfferMainForm extends Component {
             uid: this.props.user.uid
         };
         let images = [];
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.addImagesHandler = this.addImagesHandler.bind(this);
-        this.numberValidate = this.numberValidate.bind(this);
-        this.saveInStorage = this.saveInStorage.bind(this);
-        this.submitToStorage = this.submitToStorage.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         let info = Object.assign({}, this.state.offerInfo);    //creating copy of object
         info[event.target.name] = event.target.value;                        //updating value
         this.setState({ offerInfo: info });
-        console.log(this.state)
 
     }
-    numberValidate(event) {
+    numberValidate = (event) => {
         let field = Object.assign({}, this.state.offerInfo);    //creating copy of object
-        field[event.target.name] = Number(event.target.value).toLocaleString()                      //updating value
+        field[event.target.name] = Number(event.target.value).toLocaleString()                      //updating
         this.setState({ offerInfo: field });
 
     }
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
-        const method = "POST";
-        const body = new FormData(this.form);
-        fetch("https://httpbin.org/post", { method, body })
-          .then(res => res.json())
-          .then(data => console.log(JSON.stringify(data, null, "\t")));
-        if (this.images) {
-            this.submitToStorage('offers');
-        } else {
-            let system = Object.assign({}, this.state.system);    //creating copy of object
-            system.noImages = 'someothername';                   //updating value
-            this.setState({ system });
-        }
+        formValidate(this.form).then((validateRes)=>{
+            if (this.images && !this.state.error && !validateRes) { 
+
+                this.submitToStorage('offers');
+            } else {  alert("3")
+                let system = Object.assign({}, this.state.system);    //creating copy of object
+                system.noImages = 'someothername';                   //updating value
+                this.setState({ system });
+            }
+        })
+        
+        
+
+
+
     }
-    saveInStorage() {
+    saveInStorage = () => {
         this.setState({ system: { saving: true } })
         if (this.state.offerInfo.title) {
             this.submitToStorage('savedOffers');
@@ -84,9 +80,8 @@ export default class AddOfferMainForm extends Component {
         }
 
     }
-    submitToStorage(path) {
+    submitToStorage = (path) => {
         const data = this.state.offerInfo;
-        data.data_created = new Date();
         data.uid = this.props.user.uid;
         saveInFirestoreAutoKey(`${path}/`, data)
             .then((docRef) => {
@@ -110,11 +105,10 @@ export default class AddOfferMainForm extends Component {
                 })
             })
     }
-    addImagesHandler(images) {
+    addImagesHandler = (images) => {
         this.images = images;
-
     }
-    componentDidMount() {
+    componentDidMount = () => {
         // Auto initialize all the things!
         M.AutoInit();
     }
@@ -132,16 +126,16 @@ export default class AddOfferMainForm extends Component {
                     </div>
                     :
                     <>
-                        <form onSubmit={this.handleSubmit} noValidate ref={el => (this.form = el)}>>
+                        <form onSubmit={this.handleSubmit} noValidate ref={el =>(this.form = el)}>
                             <div className="col s12 m8 l6 offset-m2  offset-l3 ">
                                 <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
                                 <div className="input-field row withoutPadding">
-                                    <input type="text" id="title" required name="title" onChange={this.handleChange} minLength={10} maxLength="80" className="validate col s12" />
+                                    <input type="text" id="title" required name="title" onChange={this.handleChange} minLength={10} maxLength="80" className="validate col s12 required" />
                                     <label htmlFor="title"><Button tooltip="Мин. длинна: 10 символов.<br>Макс. длинна: 80 символов." className="btnTooltip" tooltipoptions={{ position: 'top' }}>?</Button>Заголовок<span className="red-text">*</span></label>
                                 </div>
                                 <div className="input-field row ">
-                                    <select className=" validate col s12" id="offerType" name="offer_type_1" onChange={this.handleChange} >
-                                        <option value="" defaultValue  >Веберите</option>
+                                    <select className="validate col s12 required" id="offerType" name="offer_type_1" onChange={this.handleChange} >
+                                        <option value="" defaultValue>Выберите</option>
                                         <option value="Дом">Дом</option>
                                         <option value="Участок">Участок</option>
                                         <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
@@ -151,7 +145,7 @@ export default class AddOfferMainForm extends Component {
                                 <div className="row ">
 
                                     <div className=" input-field col s2  currency noPadding">
-                                        <select id="currency" className="validate col s1" name="currency" onChange={this.handleChange}  >
+                                        <select id="currency" className="validate col s1 required" name="currency" onChange={this.handleChange}  >
                                             <option value="$" defaultValue>$</option>
                                             <option value="Грн">Грн</option>
                                             <option value="€">€</option>
@@ -159,7 +153,7 @@ export default class AddOfferMainForm extends Component {
                                     </div>
 
                                     <div className="input-field col s10 noPadding">
-                                        <input className="validate" type="number" id="price" name="price" pattern="[0-9]*" inputMode="numeric" required onChange={this.numberValidate} />
+                                        <input className="validate required" type="number" id="price" name="price" pattern="[0-9]*" inputMode="numeric" required onChange={this.numberValidate} />
                                         <label htmlFor="price" >Цена<span className="red-text">*</span></label>
                                     </div>
 
@@ -168,7 +162,7 @@ export default class AddOfferMainForm extends Component {
                                 {offerInfo.offer_type_1 === "Дом" ? <><HousesRentForm handleChange={this.handleChange} offerInfo={this.state.level} /></> : ''}
 
                                 <div className="input-field row withoutPadding">
-                                    <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="description" className="materialize-textarea validate  s12"></textarea>
+                                    <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="description" className="materialize-textarea validate required s12"></textarea>
                                     <label htmlFor="textarea2">Описание<span className="red-text">*</span></label>
                                     <span hidden={offerInfo.description && offerInfo.description.length !== 0 ? false : true} className="right">{offerInfo.description ? offerInfo.description.length : 0} / 800</span>
                                 </div>
@@ -197,4 +191,32 @@ export default class AddOfferMainForm extends Component {
             </>
         );
     }
+}
+
+async function formValidate(dataForm){
+        const form = dataForm.getElementsByClassName("required");
+        let error = false;
+        for (let field of form) {
+            switch (field.type) {
+                case 'text':
+                case 'tel':
+                case 'number':
+                case 'textarea':
+                    if (!field.value || field.value === "") { 
+                        field.classList.add("invalid");
+                        error = true;
+                    };
+                    break;
+                case 'select-one':
+                    const el = field.parentNode.firstChild
+                    if (!el.value || el.value === "Выберите") {
+                        el.classList.add("invalid");
+                        error = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return error;  
 }

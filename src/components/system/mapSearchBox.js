@@ -54,7 +54,7 @@ const MapSearchBox = compose(
             onPlacesChanged={props.onPlacesChanged}
         >
             <div className="input-field ">
-                <input placeholder="Выберите вариант из выпадающего списка" className={`${props.error&&"invalid"} ${props.success&&'valid'}`} id="mapSearchInput" name="mapSearchInput" />
+                <input type="text" placeholder="Выберите вариант из выпадающего списка" className="validate required" id="mapSearchInput" name="mapSearchInput" />
                 <label htmlFor="mapSearchInput" className="active">Адресс обьекта<span className="red-text">*</span></label>
                 {props.error?<div className={`center-align red-text ${props.error&&"invalid"}`}>Укажите более точный адресс.</div>:''}
             </div>

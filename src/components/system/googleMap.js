@@ -20,7 +20,7 @@ const MyMapComponent = compose(
     onTilesloaded={()=> alert("!")} 
   >
     {props.isMarkerShown?
-        <Marker draggable={true} position={{ lat: props.location.lat, lng: props.location.lng}} onClick={props.onMarkerClick} />
+        <Marker draggable={true} position={{ lat: props.location.lat, lng: props.location.lng}} onDragEnd={(e)=>props.markerOnDrag(e)}  />
     :
         <Circle  center={{ lat: props.location.lat, lng: props.location.lng}} draggable={true} radius={1000} editable={true} />
     }

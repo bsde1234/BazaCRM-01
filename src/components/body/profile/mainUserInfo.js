@@ -149,6 +149,7 @@ export default class MainUserInfo extends Component {
           </div>
 
           <div className="col s12 l12">
+            <br/>
             <ul >
               <li><i className="fas fa-user col s1"></i><span className="col s11">{userInfo.name}</span> </li>
               <li><i className="fas fa-envelope col s1"></i><span className="col s11">{userInfo.email}</span></li>

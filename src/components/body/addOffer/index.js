@@ -25,8 +25,7 @@ export default class AddOfferIndex extends Component {
         <div className="col s12 ">
           {!this.state.complete?
             <Preloader /> :
-
-              <AddOfferMainForm user={this.props.auth} hidden={this.state.complete?true:true}/>
+              <AddOfferMainForm user={this.props.auth} hidden={this.state.complete?true:false}/>
             
 
           }

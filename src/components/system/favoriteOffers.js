@@ -42,7 +42,7 @@ export default class FavoriteOffers extends Component {
 
         return (
             <>
-                <div onClick={() => this.updateFavOffer(this.props.offerId)}>{this.state.offersList && this.state.offersList.includes(this.props.offerId)?<i className="far fa-star inherit" ></i>:<i className="fas fa-star inherit"></i>}</div>
+                <div onClick={() => this.updateFavOffer(this.props.offerId)}>{this.state.offersList && this.state.offersList.includes(this.props.offerId)?<i className="far fa-star inherit amber-text" ></i>:<i className="fas fa-star inherit "></i>}</div>
             </>
         )
     }

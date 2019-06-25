@@ -19,7 +19,7 @@ export default class RecentOffers extends Component {
 
     }
 
-   getOfferCollection() {
+    getOfferCollection() {
         let offers = [];
         return new Promise(resolve => {
             getOfferCollection(this.props.path).then((querySnapshot) => {
@@ -34,14 +34,34 @@ export default class RecentOffers extends Component {
     }
     getFavItems() {
         return new Promise(resolve => {
-            dataSnapshot(`favOffers`, this.props.auth.uid).onSnapshot((doc)=> {
+            dataSnapshot(`favOffers`, this.props.auth.uid).onSnapshot((doc) => {
                 resolve(doc.data());
-           })
+            })
         })
+    }
+    converTime(nanoseconds) {
+        const months =
+            [
+                'Январь',
+                'Февраль',
+                'Март',
+                'Апрель',
+                'Май',
+                'Июнь',
+                'Июль',
+                'Август',
+                'Сентябрь',
+                'Октябрь',
+                'Ноябрь',
+                'Декабрь'
+            ];
+            console.log(nanoseconds)
+        let date = new Date(nanoseconds);
+        return date.toString();
     }
     async  getData() {
         const offers = await this.getOfferCollection();
-        if(this.props.auth){
+        if (this.props.auth) {
             const favOffers = await this.getFavItems();
             this.setState({
                 offers,
@@ -59,14 +79,17 @@ export default class RecentOffers extends Component {
     render() {
 
         const { offers, loaded } = this.state;
+
         if (offers.length > 0) {
             return (
                 <div>
                     {offers.map((data, idx) => (
-                        <div key={idx} className="col l12 m12 s12 offerCardWrap noMarginPadding">
+
+
+                        <div key={idx} className="col l12 m12 s12 offerCardWrap ">
                             <div>
                                 <div className="col s4 offerImages noMarginPadding">
-                                    {data.images && data.images.length <= 1 ? <img src={data.images[0]} alt='' /> : <Carousel images={data.images.length >=2?data.images.slice(0, 3):data.images} options={{ fullWidth: true, dist: 15, indicators: true, noWrap: true, padding: 10 }} />}
+                                    {data.images && data.images.length <= 1 ? <img src={data.images[0]} alt='' /> : <Carousel centerImages={true} images={data.images.length >= 2 ? data.images.slice(0, 3) : data.images} options={{ fullWidth: true, dist: 15, indicators: true, noWrap: true, padding: 10 }} />}
                                 </div>
                                 <div className="col s6 offerText">
                                     <Link to={{
@@ -77,13 +100,14 @@ export default class RecentOffers extends Component {
                                         <h2>{data.title}</h2>
                                     </Link>
                                     <ul>
-                                        <li>{data.offer_type_1}</li>
+                                        <li>{data.offer_type_1} > {data.offer_type_2}</li>
                                         <li></li>
-                                        <li></li>
+                                        <li><i className="far fa-clock"></i> { new Date(data.data_created.toDate() ).toLocaleDateString()}
+                                        </li>
                                     </ul>
                                 </div>
                                 <div className="col s2 offerPrice center-align">
-                                    <div className="addFav "><FavoriteOffers  uid={this.props.auth?this.props.auth.uid: null} offerId={data.id} offersList={this.state.favOffers}/></div>
+                                    <div className="addFav "><FavoriteOffers uid={this.props.auth ? this.props.auth.uid : null} offerId={data.id} offersList={this.state.favOffers} /></div>
                                     <div className="offerPrice">{data.price + " " + data.currency}</div>
                                 </div>
                             </div>

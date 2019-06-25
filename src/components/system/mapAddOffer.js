@@ -5,7 +5,7 @@ import { MapPointerSwitcher } from './mapPointerSwitcher';
 
 export default class MapAddOffer extends React.PureComponent {
   state = {
-    isMarkerShown: false,
+    isMarkerShown:true,
     location:{
       lat:48.4,
       lng:35
@@ -13,22 +13,7 @@ export default class MapAddOffer extends React.PureComponent {
     successSearch: false
   }
 
-  componentDidMount() {
-    this.delayedShowMarker()
-  }
-
-  delayedShowMarker = () => {
-    setTimeout(() => {
-      this.setState({ isMarkerShown: true })
-    }, 3000)
-  }
-
-  handleMarkerClick = () => {
-    this.setState({ isMarkerShown: false })
-    this.delayedShowMarker()
-  }
   getPlace = (place) => {
-    console.log(place)
     this.setState({
       location:{
         lat: place["0"].geometry.location.lat(),
@@ -36,11 +21,21 @@ export default class MapAddOffer extends React.PureComponent {
       },
       successSearch: true
     });
+    
   }
   switchMapPointer =()=>{
     this.setState(prevState => ({
       isMarkerShown: !prevState.isMarkerShown
     }));
+  }
+  markerOnDrag =(e)=>{
+    console.log(e)
+    this.setState({
+      location:{
+        lat: e.latLng.lat(),
+        lng: e.latLng.lng()
+      }
+    });
   }
   render() {
     return (
@@ -52,6 +47,7 @@ export default class MapAddOffer extends React.PureComponent {
         {this.state.successSearch?
                   <div className="col s12">
                   <MyMapComponent
+                    markerOnDrag={this.markerOnDrag}
                     isMarkerShown={this.state.isMarkerShown}
                     onMarkerClick={this.handleMarkerClick}
                     location={this.state.location}
