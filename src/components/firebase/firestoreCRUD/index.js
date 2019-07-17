@@ -55,6 +55,11 @@ export function deleteInFirestoreByKey(collection, key) {
         console.error("Error removing document: ", error);
     });
 }
+export function createFireStoreArray(collection, key, arrayName, data) {
+    return firebase.firestore().collection(collection).doc(key).set({
+        [arrayName]: firebase.firestore.FieldValue.arrayUnion(data)
+    });
+}
 export function updateFireStoreArray(collection, key, arrayName, data) {
     return firebase.firestore().collection(collection).doc(key).update({
         [arrayName]: firebase.firestore.FieldValue.arrayUnion(data)

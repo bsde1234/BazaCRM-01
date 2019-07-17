@@ -1,20 +1,20 @@
-.flexInlineList {
+.addOfferMainWrap .flexInlineList {
     display: flex;
     align-items: center;
 }
-.noPadding{
+.addOfferMainWrap .noPadding{
     padding: 0 !important;
 }
 
-.helper-text{
+.addOfferMainWrap .helper-text{
     font-family: 'Font Awesome\ 5 Free' !important;
 }
 
-.fas, .far{
+.addOfferMainWrap .fas, .addOfferMainWrap .far{
     font-size: 20px;
 }
 
-.btnTooltip{
+.addOfferMainWrap .btnTooltip{
     border-radius: 100px;
     background-color: #424242;
     height: 15px;
@@ -26,10 +26,10 @@
     margin-right: 5px;
     line-height: 0;
 }
-.btnTooltip:hover {
+.addOfferMainWrap .btnTooltip:hover {
     background-color: #424242;
 }
-.squareFields, .squareFields .input-field{
+.addOfferMainWrap .squareFields, .addOfferMainWrap .squareFields .input-field{
     margin: 25px 0 0 0;
     padding-left: 0;
     padding-right: 0;
@@ -37,26 +37,26 @@
     display: flex;
     align-items: baseline;
 }
-.input-field {
+.addOfferMainWrap .input-field {
     margin: 25px 0px 0 0
 }
-.currency{
-    padding-right: 20px !important;
+.addOfferMainWrap .currency{
+    padding-left: 20px !important;
 }
 /* MODAL */
-#modal1{
+.addOfferMainWrap #modal1{
     max-width: 400px;
 }
-#modal1 .modal-content{
+.addOfferMainWrap #modal1 .addOfferMainWrap .modal-content{
     margin: 0 auto;
     padding: 20px 50px;
 }
 
-#modal1 .modal-close{
+.addOfferMainWrap #modal1 .addOfferMainWrap .modal-close{
     position: absolute;
     top: 10px;
     right: 10px;
 }
-#modal1 .modal-footer{
+.addOfferMainWrap #modal1 .addOfferMainWrap .modal-footer{
     display: none;
 }

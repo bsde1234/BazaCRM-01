@@ -96,7 +96,7 @@ export default class DragNdrop extends React.Component {
 
         return (
             <div>
-                <div className="left-align">
+                <div className="center-align">
                     <button type="button" className="btn grey darken-3 " name="action" onClick={this.addPhoto} hidden={files.length >= 5 ? true : false}> Добавить фото<span hidden={this.props.required?false:true} className="red-text">*</span></button>
                     <div hidden={this.props.required && files.length === 0 ?false:true} className={(this.props.error ? 'red-text' : '')}>Загрузите минимум одно фото</div>
                 </div>
@@ -113,7 +113,7 @@ export default class DragNdrop extends React.Component {
                 <div className="dragNdrop">
                     <ul>
                         {this.state.files.map((item, idx) => (
-                            <li key={idx} onDragOver={() => this.onDragOver(idx)} onClick={this.deleteImage}>
+                            <li key={idx} onDragOver={() => this.onDragOver(idx)} onClick={this.deleteImage} className={idx === 0 ? "greenBorder" : '' }>
                                 <img src={item.src}
                                     alt='altText'
                                     width="120px"
@@ -122,6 +122,7 @@ export default class DragNdrop extends React.Component {
                                     onDragStart={e => this.onDragStart(e, idx)}
                                     onDragEnd={this.onDragEnd}
                                 />
+                                {idx === 0 ? <div className="mainPicture">Главное фото обьявления <i className="fas fa-arrow-circle-right"></i></div> : '' }
                             </li>
                         ))}
                     </ul>

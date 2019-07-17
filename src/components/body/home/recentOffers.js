@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { getOfferCollection, dataSnapshot } from '../../firebase/firestoreCRUD';
 import { Preloader } from '../../system/preloader';
-import { Link } from 'react-router-dom';
-import { Carousel } from 'react-materialize';
-import FavoriteOffers from '../../system/favoriteOffers';
+import {AptRoomsOfferPreview} from './offerPreview/aptAndRooms';
 
 export default class RecentOffers extends Component {
 
@@ -39,41 +37,23 @@ export default class RecentOffers extends Component {
             })
         })
     }
-    converTime(nanoseconds) {
-        const months =
-            [
-                'Январь',
-                'Февраль',
-                'Март',
-                'Апрель',
-                'Май',
-                'Июнь',
-                'Июль',
-                'Август',
-                'Сентябрь',
-                'Октябрь',
-                'Ноябрь',
-                'Декабрь'
-            ];
-            console.log(nanoseconds)
-        let date = new Date(nanoseconds);
-        return date.toString();
-    }
+
     async  getData() {
         const offers = await this.getOfferCollection();
         if (this.props.auth) {
-            const favOffers = await this.getFavItems();
-            this.setState({
-                offers,
-                favOffers: favOffers["offerID"]
+            await this.getFavItems().then((favOffers) => {
+                this.setState({
+                    offers,
+                    favOffers: favOffers ? favOffers["offerID"] : '',
+                    loaded: true
+                })
             })
         } else {
             this.setState({
-                offers
+                offers,
+                loaded: true
             })
         }
-
-
     }
 
     render() {
@@ -84,33 +64,22 @@ export default class RecentOffers extends Component {
             return (
                 <div>
                     {offers.map((data, idx) => (
-
-
                         <div key={idx} className="col l12 m12 s12 offerCardWrap ">
-                            <div>
-                                <div className="col s4 offerImages noMarginPadding">
-                                    {data.images && data.images.length <= 1 ? <img src={data.images[0]} alt='' /> : <Carousel centerImages={true} images={data.images.length >= 2 ? data.images.slice(0, 3) : data.images} options={{ fullWidth: true, dist: 15, indicators: true, noWrap: true, padding: 10 }} />}
-                                </div>
-                                <div className="col s6 offerText">
-                                    <Link to={{
-                                        pathname: `/offerDetails/${data.id}`,
-                                        search: '?sort=name',
-                                        hash: '#the-hash',
-                                    }}>
-                                        <h2>{data.title}</h2>
-                                    </Link>
-                                    <ul>
-                                        <li>{data.offer_type_1} > {data.offer_type_2}</li>
-                                        <li></li>
-                                        <li><i className="far fa-clock"></i> { new Date(data.data_created.toDate() ).toLocaleDateString()}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className="col s2 offerPrice center-align">
-                                    <div className="addFav "><FavoriteOffers uid={this.props.auth ? this.props.auth.uid : null} offerId={data.id} offersList={this.state.favOffers} /></div>
-                                    <div className="offerPrice">{data.price + " " + data.currency}</div>
-                                </div>
-                            </div>
+                             
+                            {( ()=> {
+                                
+                                switch (data.offer_type_1) {
+                                    case 'Дом':
+                                        return <AptRoomsOfferPreview data={data} favOffers={this.state.favOffers} />;
+                                    case 'warning':
+                                        return <span>AAAA</span>;
+                                    case 'error':
+                                        return <span>BBBB</span>;
+                                    default:
+                                        return <AptRoomsOfferPreview data={data} favOffers={this.state.favOffers} />;
+                                }
+                            })()}
+                            
                         </div>
                     ))}
                 </div>

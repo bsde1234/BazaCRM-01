@@ -5,7 +5,7 @@ import { StandaloneSearchBox } from "react-google-maps/lib/components/places/Sta
 
 const MapSearchBox = compose(
     withProps({
-        googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBVx04MozqTwq0ikjuernD5cuubbM6UQSM&v=3.exp&libraries=geometry,drawing,places",
+        googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBVx04MozqTwq0ikjuernD5cuubbM6UQSM&v=3.exp&libraries=places&language=ru&region=RU",
         loadingElement: <div style={{ height: `100%` }} />,
         containerElement: <div style={{ height: `400px` }} />,
     }),
@@ -16,12 +16,16 @@ const MapSearchBox = compose(
                 places: [],
                 onSearchBoxMounted: ref => {
                     refs.searchBox = ref;
+                    
                 },
                 onPlacesChanged: () => {
+                    
                     let idx = 0;
                     const places = refs.searchBox.getPlaces();
                     for(let el of places["0"].address_components){
+                        
                         let type = el.types["0"];
+                        
                         if( type=== "sublocality_level_1" || type === "route"){ 
                             this.props.returnPlace(refs.searchBox.getPlaces());
                             this.setState({
@@ -50,8 +54,9 @@ const MapSearchBox = compose(
         <h6 className="center-align"><i className="fas fa-search-location"></i> Местоположение обьекта</h6>
         <StandaloneSearchBox
             ref={props.onSearchBoxMounted}
-            bounds={props.bounds}
             onPlacesChanged={props.onPlacesChanged}
+            language="ru"
+            
         >
             <div className="input-field ">
                 <input type="text" placeholder="Выберите вариант из выпадающего списка" className="validate required" id="mapSearchInput" name="mapSearchInput" />

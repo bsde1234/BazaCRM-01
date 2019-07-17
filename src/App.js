@@ -13,7 +13,9 @@ import PageNotFound from './components/navigation/404'
 import { AuthProtectedRoute } from './components/navigation/authProtectedRoute';
 import { Preloader } from './components/system/preloader';
 import AddOfferIndex from './components/body/addOffer';
-import DragNdrop from './components/system/dragNdrop';
+import MessageMain from './components/auth/message';
+import OfferDetails from './components/body/offerDetails';
+import { PublicRoute } from './components/navigation/publicRoute';
 
 
 class App extends Component {
@@ -30,7 +32,7 @@ class App extends Component {
           authUser && authUser.emailVerified
             ? this.setState({ authUser, complete:true })
             : this.setState({ authUser: null,complete:true })
-      },error=>alert("error", error), complete=>console.log('complete',complete)
+      },error=>console.log("ERROR: ", error), complete=>console.log('complete',complete)
     )
   }
 
@@ -47,9 +49,11 @@ class App extends Component {
             <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path='/'  render={props => <Home auth={this.state.authUser} {...props} />}/>
+                <PublicRoute key="add-client" exact path="/" auth={this.state.authUser} component={Home} />
+                <PublicRoute key="edit-client" exact path="/home" auth={this.state.authUser} component={Home} />
+                <PublicRoute exact path='/details' auth={this.state.authUser} component={OfferDetails} />
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
-                <Route path='/dragndrop' component={DragNdrop} />
+                <PrivateRoute path='/message' auth={this.state.authUser}  component={MessageMain} />
                 <AuthProtectedRoute path='/authentication' auth={this.state.authUser} component={Authentication} />
                 <AuthProtectedRoute path='/forgetPassword' component={PasswordForgetForm} />
                 <PrivateRoute path="/profile" auth={this.state.authUser}  component={Profile} />

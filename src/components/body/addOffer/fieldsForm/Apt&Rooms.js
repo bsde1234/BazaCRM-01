@@ -1,14 +1,15 @@
 import React from 'react';
 import { compose, lifecycle } from "recompose";
 import M from "materialize-css";
-const HousesRentForm = compose(
+export const AptAndRoomsForm = compose(
     lifecycle({
         componentDidMount(){
             M.AutoInit();
         }
-    })
+    }),
 )(props =>
-    <> 
+    
+    <> {console.log(props)}
         <div className="input-field  withoutPadding">
             <select  className=" validate required" id="offerType" name="offer_type_2" onChange={props.handleChange}>
             <option value="" defaultValue>Выберите</option>
@@ -64,33 +65,42 @@ const HousesRentForm = compose(
         </p>
         <div className="row noMarginPadding">
             <div className="col l5 m5 s12 left input-field noMarginPadding">
-                <input type="number" id="level" required name="level" onChange={props.handleChange} maxLength="2" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
+                <input type="number" id="level" required name="level" onChange={props.handleChange} maxLength="2" min="0" max={props.offerInfo.building_level} className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
                 <label htmlFor="level">Этаж <span className="red-text">*</span></label>
             </div>
             <div className="col l5 m5 s12 right input-field noMarginPadding">
-                <input type="number" id="building_level" required name="building_level" onChange={props.handleChange} maxLength="2" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
+                <input type="number" id="building_level" required name="building_level" onChange={props.handleChange} min="0"  maxLength="2" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
                 <label htmlFor="building_level">Этажность <span className="red-text">*</span></label>
             </div>
+            <ul className="col s12 m12 red-text noMarginPadding">
+                {Number(props.offerInfo.level) > Number(props.offerInfo.building_level)?<li>Этаж не должен быть выше этажности.</li>:''}
+                {Math.sign(props.offerInfo.level) === -1 || Math.sign(props.offerInfo.building_level) === -1?<li>Не должно быть отрицательным.</li>:''}
+            </ul>
         </div>
         <div className="row  noMarginPadding squareFields">
-            <div className="input-field marginLR-0  col s5">
-                <input type="number" id="total_square" required name="total_square" onChange={props.handleChange}  maxLength="3" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
+            <div className="input-field marginLR-0  col m5 s12">
+                <input type="number" id="total_square" required name="total_square" onChange={props.handleChange} min="0"   maxLength="3" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
                 <label htmlFor="total_square">Общая площадь<span className="red-text">*</span></label>
-            </div>
-            <div className="col s1 marginLR-0">
                 M<sub>2</sub>
             </div>
+            <ul className="col s12 m7 red-text ">
+                {Number(props.offerInfo.total_square) <Number(props.offerInfo.kitchen_square)?<li>Не должно быть меньше площади кухни.</li>:''}
+                {Math.sign(props.offerInfo.total_square) === -1?<li>Не должно быть отрицательным.</li>:''}
+            </ul>
+                
         </div>
-        <div className="row withoutPadding noMarginPadding squareFields">
-            <div className="input-field marginLR-0  col s5">
-                <input type="number" id="kitchen_square" required name="kitchen_square" onChange={props.handleChange}  maxLength="3" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
+        <div className="row  noMarginPadding squareFields">
+            <div className="input-field marginLR-0  col m5 s12">
+                <input type="number" id="kitchen_square" required name="kitchen_square" onChange={props.handleChange} min="0" max={props.offerInfo.total_square} maxLength="3" className="validate required" pattern="^-?[0-9]\d*\.?\d*$" />
                 <label htmlFor="kitchen_square">Площадь кухни<span className="red-text">*</span></label>
-            </div>
-            <div className="col s1 marginLR-0">
                 M<sub>2</sub>
             </div>
+            <ul className="col s12 m7 red-text">
+                {Number(props.offerInfo.total_square) <Number(props.offerInfo.kitchen_square)?<li>Не должно превышать общую площадь.</li>:''}
+                {Math.sign(props.offerInfo.kitchen_square) === -1?<li>Не должно быть отрицательным.</li>:''}
+            </ul>
         </div>
-        <div className="input-field  withoutPadding">
+        <div className="input-field  ">
             <select required className=" validate" id="walls_type" name="walls_type" onChange={props.handleChange}>
                 <option value="" defaultValue>Выберите</option>
                 <option value="Царский дом">Царский дом</option>
@@ -102,6 +112,3 @@ const HousesRentForm = compose(
         
     </>
 )
-
-export default HousesRentForm;
-

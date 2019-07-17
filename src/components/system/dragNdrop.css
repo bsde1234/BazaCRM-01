@@ -1,8 +1,41 @@
 .dragNdrop ul{
     display: inline-flex;
+    justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+    
 }
 
 .dragNdrop li img{
     cursor: grabbing;
+    display: block;
+    max-height: 130px;
+    max-width: 130px;
+    width: auto;
+}
+.mainPicture{
+    position: absolute;
+    right: 140px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+.dragNdrop ul li {
+    position: relative;
+    border: 1px solid #cccc;
+    margin: 5px 7px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    width: 140px;
+    height: 135px;
+    text-align: center;
+    justify-content: center;
+
+}
+.greenBorder{
+    border: 1px solid rgb(0, 102, 0) !important; 
 }

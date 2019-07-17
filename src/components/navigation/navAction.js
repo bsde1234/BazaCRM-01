@@ -11,8 +11,8 @@ export const NavAction = (props) => {
                 <div className="nav-wrapper">
                     <Link to="/" className="brand-logo">BAZA CRM</Link>
                     <ul className="right hide-on-med-and-down">
-                        <li><NavLink activeClassName="activeLink" exact to='/addoffer'><i className="fas fa-plus" ></i> Add New Offer</NavLink></li>
-                        <li><NavLink to='/dragndrop'>Dran&Drop</NavLink></li>
+                        <li><NavLink activeClassName="activeLink" exact to='/addoffer'><i className="fas fa-plus" ></i> Добавить Объявление</NavLink></li>
+                        <li><NavLink to='/message'><i className="far fa-paper-plane"></i> Сообщения</NavLink></li>
                         <li><NavLink activeClassName="activeLink" exact to='/testCompWrap'>testCompWrap</NavLink></li>
                         <li hidden={props.auth ? true : false}><NavLink to='/authentication'>Регистрация/Вход</NavLink></li>
                         <li className="navUserInfo" hidden={props.auth ? false : true}><NavLink to='/profile'>{props.auth && props.auth.displayName ? props.auth.displayName : 'Profile'}</NavLink></li>

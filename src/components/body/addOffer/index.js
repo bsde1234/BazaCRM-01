@@ -21,13 +21,11 @@ export default class AddOfferIndex extends Component {
   }
   render() {
     return (
-      <div className="">
+      <div className="addOfferMainWrap">
         <div className="col s12 ">
           {!this.state.complete?
             <Preloader /> :
               <AddOfferMainForm user={this.props.auth} hidden={this.state.complete?true:false}/>
-            
-
           }
         </div>
       </div>
