@@ -22,6 +22,7 @@ export function getDataByKey(collection, key) {
 }
 export function dataSnapshot(collection, key) {
     return firebase.firestore().collection(collection).doc(key)
+
 }
 
 export function getOfferCollection(collection) {

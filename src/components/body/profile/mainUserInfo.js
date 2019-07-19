@@ -78,7 +78,6 @@ export default class MainUserInfo extends Component {
   }
 
   deletePhoto() {
-    console.log(this.props.user.userInfo)
     let filePath = `files/images/users/${this.props.user.uid}/profilePic/${this.props.user.userInfo.userPic.name}`;
     DeleteFile(filePath).then(() => {
       const path = `users/`;

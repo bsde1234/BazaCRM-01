@@ -34,7 +34,7 @@ class SignUpForm extends Component {
     const { email, passwordOne, phone, name, userType, lastName, rieltorStartDate } = this.state;
     doCreateUserWithEmailAndPassword(email, passwordOne, name, phone)
       .then((data) => {
-        let userInfo = { userInfo: { email, name, lastName, rieltorStartDate, phone, userType, userPic: { filePath: '', name: '' } } }
+        let userInfo = { userInfo: { email, name, lastName, rieltorStartDate, phone, userType, userPic: { filePath: '', name: '' }, date_of_creation: new Date() } }
         saveInFirestoreByKey(`users/`, data.user.uid, userInfo).catch(error => {
           ErrorHandler(error).then(error => {
             this.setState({

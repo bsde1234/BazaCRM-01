@@ -49,8 +49,8 @@ class App extends Component {
             <Navbar />
             <div className="container">
               <Switch>
-                <PublicRoute key="add-client" exact path="/" auth={this.state.authUser} component={Home} />
-                <PublicRoute key="edit-client" exact path="/home" auth={this.state.authUser} component={Home} />
+                <PublicRoute key="home1" exact path="/" auth={this.state.authUser?this.state.authUser.uid:''} component={Home} />
+                <PublicRoute key="home2" exact path="/home" auth={this.state.authUser?this.state.authUser.uid:''} component={Home} />
                 <PublicRoute exact path='/details' auth={this.state.authUser} component={OfferDetails} />
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
                 <PrivateRoute path='/message' auth={this.state.authUser}  component={MessageMain} />

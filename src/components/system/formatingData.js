@@ -1,4 +1,4 @@
-export const formatDate = (data) => {
+export const formatDate = (data, withoutTime) => {
     const months = [
         'Января',
         'Февраля',
@@ -17,5 +17,5 @@ export const formatDate = (data) => {
     const minutes = min.toString().length===1?"0"+min:min;
     const time = " в " + data.getHours() + ":" + minutes
     const date = data.getDate() + " " + months[data.getMonth()] + " " + data.getFullYear()
-    return date + time ;
+    if(withoutTime)  return date; else return date + time ;
 }

@@ -10,57 +10,48 @@ export default class RecentOffers extends Component {
         this.state = {
             offers: [],
             error: '',
-            loaded: false
+            loaded: false,
+            uid: this.props.auth?this.props.auth:''
         }
 
-        this.getData();
+        this.getOfferCollection()
 
     }
 
-    getOfferCollection() {
+    getOfferCollection=()=> {
+        
+        if(this.state.uid){ this.getFavItems(this.state.uid); } 
+
         let offers = [];
-        return new Promise(resolve => {
-            getOfferCollection(this.props.path).then((querySnapshot) => {
-                querySnapshot.forEach((offer) => {
-                    let data = offer.data()
-                    data.id = offer.id
-                    offers.push(data)
-                    resolve(offers);
-                })
+        return getOfferCollection(this.props.path).then((querySnapshot) => {
+            querySnapshot.forEach((offer) => {
+                let data = offer.data()
+                data.id = offer.id
+                offers.push(data)
             })
-        })
-    }
-    getFavItems() {
-        return new Promise(resolve => {
-            dataSnapshot(`favOffers`, this.props.auth.uid).onSnapshot((doc) => {
-                resolve(doc.data());
-            })
-        })
-    }
-
-    async  getData() {
-        const offers = await this.getOfferCollection();
-        if (this.props.auth) {
-            await this.getFavItems().then((favOffers) => {
-                this.setState({
-                    offers,
-                    favOffers: favOffers ? favOffers["offerID"] : '',
-                    loaded: true
-                })
-            })
-        } else {
+        }).then( ()=>{
             this.setState({
                 offers,
-                loaded: true
+                loaded:true
+            },()=>{
+                  
+                
             })
-        }
+        })
+    }
+    getFavItems=(uid)=> {
+            dataSnapshot(`favOffers`, uid).onSnapshot((doc)=> {
+                this.setState({
+                    favOffers: doc.data() ? {...doc.data()} : ''
+            })
+        })
     }
 
     render() {
 
-        const { offers, loaded } = this.state;
-
-        if (offers.length > 0) {
+        const { offers, loaded, uid } = this.state;
+        
+        if (loaded && offers.length > 0 ) {
             return (
                 <div>
                     {offers.map((data, idx) => (
@@ -70,13 +61,13 @@ export default class RecentOffers extends Component {
                                 
                                 switch (data.offer_type_1) {
                                     case 'Дом':
-                                        return <AptRoomsOfferPreview data={data} favOffers={this.state.favOffers} />;
+                                        return <AptRoomsOfferPreview data={data} uid={uid} favOffers={this.state.favOffers} />;
                                     case 'warning':
                                         return <span>AAAA</span>;
                                     case 'error':
                                         return <span>BBBB</span>;
                                     default:
-                                        return <AptRoomsOfferPreview data={data} favOffers={this.state.favOffers} />;
+                                        return "NEW";
                                 }
                             })()}
                             
