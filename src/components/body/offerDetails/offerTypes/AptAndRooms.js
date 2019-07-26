@@ -1,83 +1,70 @@
 import React from 'react';
-import { Carousel } from 'react-materialize';
 import FavoriteOffers from '../../../system/favoriteOffers';
-import { formatDate } from '../../../system/formatingData';
+import { OfferDetails_UserInfo as UserInfo } from '../parts/userInfo';
+import { OfferDetailsInfo } from '../parts/offerInfo';
+import OfferViews  from '../../../system/offerViews';
+import { CustomCarousel } from '../../../system/carousel';
 
 
-export const AptRoomsOfferDetails = (props) =>{
 
-    const { offerInfo,favOffers, offerKey, uid, userInfo } = props;
+export const AptRoomsOfferDetails = (props) => {
+
+    const { offerInfo, favOffers, offerKey, uid, userInfo } = props;
+
     return (
-    <>
-    {console.log(userInfo)}
-        <div className="row">
-            <div className="imagesWrap col s12 m7">
-                <div id="carouselWrap">
-                    <div className="right"><i className="fas fa-expand-arrows-alt"></i></div>
-                    <Carousel options={{ centerImages: true }} images={offerInfo.images} />
-                </div>
-                <div className="col s12">
-                    <p>{offerInfo.description}</p>
-                </div>
-            </div>
-        {
-            // USER COMPONENT START
-        }
-            <div className="col m5 s12">
-                    <div className="right">
-                        { <FavoriteOffers offersList={favOffers?favOffers.offerID:''} uid={uid}  offerId={offerKey} /> }
-                    </div>
-                <div className="center-align offerTitle">
-                    <h1>{offerInfo.title}</h1>
-                </div>
-                <div className="row">
-                    <div className="col s6 center-align">
-                        <span  className="fw-100">Площадь</span>
-                        <h4 className="noMarginPadding">{offerInfo.total_square} м<sub>2</sub></h4>
-                    </div>
-                    <div className="col s6 center-align">
-                        <span className="fw-100">Цена</span>
-                        <h4 className="noMarginPadding">{offerInfo.price} {offerInfo.currency}</h4>
+        <>
+            
+            <div className="row">
+                <div className="col m5 s12 right">
+                    <div className="favoriteRow">
+                        <span className="right">
+                            {<FavoriteOffers offersList={favOffers ? favOffers.offerID : ''} uid={uid} offerId={offerKey} />}
+                        </span>
+                        <span className="left">
+                            <span className="fw-100 "><OfferViews id={offerKey} uid={uid} /></span>
+                        </span>
                     </div>
 
-                </div>
-
-                {userInfo&& props.loaded?
-                    <>
-                        <div className="col s12 center-align">
-                        <hr/>
-                            <span className="fw-100">Автор:</span>
-                            <div className="userPic">
-                            <img height="100px" alt="Изображение пользователя" src={
-                                userInfo.userPic.filePath? userInfo.userPic.filePath
-                                :'https://firebasestorage.googleapis.com/v0/b/baza-001.appspot.com/o/system%2Foffer%2FnoUserPic.png?alt=media&token=c7a61d94-82d6-48ce-ac9a-743170ca7426'
-                            } />
-                            </div>
-                            <h5 className="noMarginPadding">{userInfo.name} {userInfo.lastName}</h5> 
-                                <span>{userInfo.userType}</span>
-                                <br/><br/>
-                            <div className="col s12">
-                                <button title="Написать Сообщение" className="btn grey darken-3  col s3 offset-s2" type="button" > <i className="far fa-paper-plane"></i> </button>
-                                <button title="Позвонить" className="btn grey darken-3 col s3 offset-s2" type="button" > <i className="fas fa-phone"></i> </button>
-                            </div>
-                                <br/><br/>
-                                {userInfo.date_of_creation?<div className="col s12"><span className="fw-100">Дата регистрации:</span> {formatDate(userInfo.date_of_creation.toDate(), 'noTime')}</div>:null}
-
-                            <a href="#">Все обьявления автора.</a>
+                    <div className="center-align offerTitle">
+                        <h1>{offerInfo.title}</h1>
+                        <h6 className="bold">{offerInfo.offer_type_2}</h6>
+                    </div>
+                    <div className="row">
+                        <div className="col s6 center-align">
+                            <span className="fw-100">Площадь</span>
+                            <h5 className="noMarginPadding">{offerInfo.total_square} м<sub>2</sub></h5>
                         </div>
-                        {
-                            // USER COMPONENT END
+                        <div className="col s6 center-align">
+                            <span className="fw-100">Цена</span>
+                            <h5 className="noMarginPadding">{offerInfo.price} {offerInfo.currency}</h5>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div className="imagesWrap col s12 m7 left">
+                    <div id="carouselWrap">
+                        <div className="right"><i className="fas fa-expand-arrows-alt"></i></div>
+
+                        <div><CustomCarousel images={offerInfo.images} /></div>
+                        
+                    </div>
+                    <div className="col s12 noMarginPadding">
+                        <OfferDetailsInfo {...offerInfo} />
+                    </div>
+                </div>
+
+
+                <div className="col m5 s12 right">
+                        {userInfo && props.loaded ?
+                            // USER COMPONENT START
+                            <UserInfo {...userInfo} />
+                            : <div className="center-align red-text">
+                                Данные владельца обьявления не найдены.
+                                <br />Вероятней всего, данный пользователь удалил свой аккаунт.
+                            </div>
                         }
-                    </>
-                :<div className="center-align red-text">
-                    Данные владельца обьявления не найдены.
-                    <br/>Вероятней всего, данный пользователь удалил свой аккаунт.
-                </div>}
+                </div>
             </div>
-        </div>
-
-
-
-    </>
+        </>
     )
 }

@@ -9,7 +9,7 @@ export const AptAndRoomsForm = compose(
     }),
 )(props =>
     
-    <> {console.log(props)}
+    <> 
         <div className="input-field  withoutPadding">
             <select  className=" validate required" id="offerType" name="offer_type_2" onChange={props.handleChange}>
             <option value="" defaultValue>Выберите</option>
@@ -46,20 +46,20 @@ export const AptAndRoomsForm = compose(
         </div>
         <p>
             <label>
-                <input type="checkbox" className="filled-in" name="no_commission" onChange={props.handleChange} />
+                <input type="checkbox" className="filled-in" name="no_commission" onChange={props.handleCheckBoxes} />
                 <span>Без комиссии</span>
             </label>
         </p>
 
         <p>
             <label>
-                <input type="checkbox" className="filled-in" name="ready_for_rielters" onChange={props.handleChange} />
+                <input type="checkbox" className="filled-in" name="ready_for_rielters" onChange={props.handleCheckBoxes} />
                 <span>Готов сотрудничать с риэлторами</span>
             </label>
         </p>
         <p>
             <label>
-                <input type="checkbox" className="filled-in" name="for_split_rent" onChange={props.handleChange} />
+                <input type="checkbox" className="filled-in" name="for_split_rent" onChange={props.handleCheckBoxes} />
                 <span>Для совместной аренды</span>
             </label>
         </p>

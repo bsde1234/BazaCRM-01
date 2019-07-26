@@ -3,7 +3,6 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/navigation';
 import Home from './components/body/home';
-import Authentication from './components/auth/authentication/';
 import firebase from './components/system/fireConfig'
 import { AuthUserContext } from './components/auth/session';
 import PasswordForgetForm from './components/auth/forgetPassword';
@@ -16,7 +15,7 @@ import AddOfferIndex from './components/body/addOffer';
 import MessageMain from './components/auth/message';
 import OfferDetails from './components/body/offerDetails';
 import { PublicRoute } from './components/navigation/publicRoute';
-
+import Authentication from './components/auth/authentication';
 
 class App extends Component {
   constructor(props) {

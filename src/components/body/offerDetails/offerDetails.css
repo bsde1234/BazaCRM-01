@@ -5,9 +5,35 @@
 .fw-100{
     font-weight: 100;
 }
+/* USER PIC */
 .userPic img {
     max-height: 100px;
     max-width: 200px;
     width: auto;
     border-radius: 1000px;
+}
+
+.fa-star{
+    font-size: 22px;
+    margin: 10px 0;
+}
+h1{
+    margin: 10px 0;
+}
+.favoriteRow{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+/*  CAROUSEL  */
+.carousel-item{
+    text-align: center;
+}
+.carousel-item img{
+    box-shadow: 4px 3px 6px #ccc;
+
+}
+#carouselWrap {
+
 }

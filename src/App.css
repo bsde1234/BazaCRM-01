@@ -29,9 +29,10 @@ ul{
 .noMarginPadding{
     margin: 0 !important;
     padding: 0 !important;
-
 }
-
+.link{
+    color:#039be5 !important;
+}
 .marginLR-0{
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -55,4 +56,21 @@ ul{
 }
 .hideHelperText .helper-text {
     display: none !important;
+}
+.bold{
+    font-weight: bold;
+} 
+.fs-20{
+    font-size: 20px;
+}
+.materializePreloader{
+    width: 12px;
+    height: 12px;
+}
+.materializePreloader .spinner-layer{
+    border-color: #424242 !important;
+    color: #424242 !important;
+}
+.materializePreloader .circle{
+    border-width: 2px !important;
 }

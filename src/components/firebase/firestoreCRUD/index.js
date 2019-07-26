@@ -56,6 +56,8 @@ export function deleteInFirestoreByKey(collection, key) {
         console.error("Error removing document: ", error);
     });
 }
+
+/*    ARRAY    */
 export function createFireStoreArray(collection, key, arrayName, data) {
     return firebase.firestore().collection(collection).doc(key).set({
         [arrayName]: firebase.firestore.FieldValue.arrayUnion(data)
@@ -70,4 +72,71 @@ export function deleteFireStoreArrayVal(collection, key, arrayName, data) {
     return firebase.firestore().collection(collection).doc(key).update({
         [arrayName]: firebase.firestore.FieldValue.arrayRemove(data)
     });
+}
+
+
+
+export function counterStart(key, uid){
+
+    return getDataByKey('Statistic_Offers', key ).then(data => {
+        if ( !data ) {
+            createCounter(key,uid);   
+            return {count: 1};
+        } else {
+            if (uid){
+                counterAddRegUserData(key)
+            } else { 
+                counterAddUnknownUserData(key);
+            }
+
+            return data;
+        }
+    })
+}
+
+// CREATE COUNTER & USER COUNTER
+export function createCounter(key, uid) {
+    const batch = firebase.firestore().batch();
+
+    const totalRef = firebase.firestore().collection('Statistic_Offers').doc(key);
+    const unregisteredUserRef = firebase.firestore().collection(`Statistic_Offers/${key}/users`).doc(`unknownUsers`)
+    const registeredUserRef = firebase.firestore().collection(`Statistic_Offers/${key}/users`).doc(`registeredUsers`)
+    
+    batch.set(totalRef, {count: 1,date_created : firebase.firestore.FieldValue.serverTimestamp() } );
+    batch.set(unregisteredUserRef, { count: 1});
+    batch.set(registeredUserRef, { count: 1});
+
+    //const milliseconds = "_"+Math.random().toString(36).substr(2, 9);
+    //const data = {count: 1, date_created : new Date() }
+
+    return batch.commit();
+}
+
+
+// CREATE REGISTERED USER COUNTER
+export function counterAddRegUserData(key){
+    const totalRef = firebase.firestore().collection('Statistic_Offers').doc(key);
+    const registeredUserRef = firebase.firestore().collection(`Statistic_Offers/${key}/users`).doc(`registeredUsers`);
+
+    totalRef.update("count", firebase.firestore.FieldValue.increment(1));
+    registeredUserRef.update("count", firebase.firestore.FieldValue.increment(1));
+
+    const data = {date_created : new Date()}
+
+    updateFireStoreArray(`Statistic_Offers/${key}/users`, `registeredUsers`, 'date_visits', data)
+}
+
+
+// CREATE UNREGISTERED USER COUNTER
+export function counterAddUnknownUserData(key){
+    const totalRef = firebase.firestore().collection('Statistic_Offers').doc(key);
+    const unregisteredUserRef = firebase.firestore().collection(`Statistic_Offers/${key}/users`).doc(`unknownUsers`);
+
+    totalRef.update("count", firebase.firestore.FieldValue.increment(1));
+    unregisteredUserRef.update("count", firebase.firestore.FieldValue.increment(1));
+
+    const data = {date_created : new Date()}
+
+    updateFireStoreArray(`Statistic_Offers/${key}/users`, `unknownUsers`, 'date_visits', data)
+
 }

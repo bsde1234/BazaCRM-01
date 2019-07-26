@@ -69,29 +69,34 @@ export default class OfferDetails extends Component {
     }
 
     main=()=>{ 
-        
         let data = {};
-        this.getOfferData(this.state.offerKey).then(offerData=>{
-            data.offerInfo = {...offerData};
-            this.getUserInfo(offerData.uid).then(userInfo => {
-                data.userInfo = {...userInfo.userInfo};
+        this.getOfferData(this.state.offerKey)
 
-                if(this.state.uid){
-                    this.getFavItems(this.state.uid);
-
-                } 
-                this.setState({
-                    ...data,
-                    loaded:true
-                }, ()=>{this.getDetailPage(offerData.offer_type_1)})
-
-
-            }).then(()=>{
-                }).catch(error => {
-                this.setState({
-                    userErrorMsg: "Данные владельца обьявления не найдены."
+        .then(offerData=>{
+            if(offerData){ 
+                data.offerInfo = {...offerData};
+                this.getUserInfo(offerData.uid)
+                .then(userInfo => {
+                    data.userInfo = {...userInfo.userInfo};
+    
+                    if(this.state.uid){
+                        this.getFavItems(this.state.uid);
+    
+                    } 
+                    this.setState({
+                        ...data,
+                        loaded:true
+                    }, ()=>{this.getDetailPage(offerData.offer_type_1)})
+    
+    
+                }).then(()=>{
+                    }).catch(error => {
+                    this.setState({
+                        userErrorMsg: "Данные владельца обьявления не найдены."
+                    })
                 })
-            })
+            }
+
             
         });
         

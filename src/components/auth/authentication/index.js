@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SignUpForm from '../signUp/';
 import SignInForm from '../signIn/';
-import { Tabs, Tab } from 'react-materialize';
-export default class Authentication extends Component {
-    render() {
+export default function Authentication() {
+
         return (
             <div className="row">
                 <br/>
@@ -15,5 +14,5 @@ export default class Authentication extends Component {
                 </div>
             </div>
         )
-    }
+    
 }

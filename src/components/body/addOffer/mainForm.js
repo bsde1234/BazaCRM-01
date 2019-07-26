@@ -5,7 +5,7 @@ import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/f
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
 import { Button  } from 'react-materialize';
 import MapAddOffer from '../../system/mapAddOffer';
-import {AptAndRoomsForm} from './fieldsForm/Apt&Rooms';
+import { AptAndRoomsForm} from './fieldsForm/apt&Rooms';
 
 const INITIAL_STATE = {
     offerInfo: {
@@ -38,12 +38,20 @@ export default class AddOfferMainForm extends Component {
     }
 
     handleChange = (event) => {
-        
         let info = Object.assign({}, this.state.offerInfo);    //creating copy of object
         info[event.target.name] = event.target.value;                        //updating value
         this.setState({ offerInfo: info });
 
     }
+    handleCheckBoxes = (event) => {
+        if(this.state.offerInfo[event.target.name]){
+            let info = Object.assign({}, this.state.offerInfo);    //creating copy of object
+            info[event.target.name] = '';                        //updating value
+            this.setState({ offerInfo: info });
+        } else {
+            this.handleChange(event)
+        }
+    };
     numberValidate = (event) => {
         let field = Object.assign({}, this.state.offerInfo);    //creating copy of object
         field[event.target.name] = Number(event.target.value).toLocaleString()                      //updating
@@ -188,7 +196,7 @@ export default class AddOfferMainForm extends Component {
                                     <div className=" input-field col s2  currency noPadding">
                                         <select id="currency" className="validate col s1 required" name="currency" onChange={this.handleChange}  >
                                             <option value="$" defaultValue>$</option>
-                                            <option value="Грн">Грн</option>
+                                            <option value="Грн">грн</option>
                                             <option value="€">€</option>
                                         </select>
                                     </div>
@@ -199,7 +207,7 @@ export default class AddOfferMainForm extends Component {
                                 {( ()=> {
                                     switch (offerInfo.offer_type_1 ) {
                                         case 'Дом':
-                                            return <AptAndRoomsForm handleChange={this.handleChange} offerInfo={this.state.offerInfo} />;
+                                            return <AptAndRoomsForm handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} offerInfo={this.state.offerInfo} />;
                                         case 'warning':
                                             return <span>AAAA</span>;
                                         case 'error':
