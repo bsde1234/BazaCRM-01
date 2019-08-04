@@ -13,17 +13,14 @@ export default class RecentOffers extends Component {
             loaded: false,
             uid: this.props.auth?this.props.auth:''
         }
-
-        this.getOfferCollection()
-
     }
 
-    getOfferCollection=()=> {
+    componentWillMount(){
         
         if(this.state.uid){ this.getFavItems(this.state.uid); } 
 
         let offers = [];
-        return getOfferCollection(this.props.path).then((querySnapshot) => {
+        getOfferCollection(this.props.path).then((querySnapshot) => {
             querySnapshot.forEach((offer) => {
                 let data = offer.data()
                 data.id = offer.id

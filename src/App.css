@@ -10,7 +10,7 @@ input[type=password]:not(.browser-default):focus:not([readonly]),input[type=text
     -webkit-box-shadow: 0 1px 0 0 #424242 !important;
     box-shadow: 0 1px 0 0 #424242 !important;
 }
-.nav-wrapper .fas{
+.nav-wrapper .fas,.nav-wrapper .far {
     font-size: 14px;
 }
 .navUserInfo > a{
@@ -42,7 +42,9 @@ ul{
     width: 100%;
     bottom: 0px;
 }
-
+.backBtn *{
+    font-size: 14px !important;
+}
 .far.inherit{
     font-weight: bold !important;
 }

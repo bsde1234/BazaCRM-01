@@ -1,5 +1,5 @@
 import React from 'react'
-import { incrementCounter, createCounter, getDataByKey, counterStart } from '../firebase/firestoreCRUD';
+import { counterStart } from '../firebase/firestoreCRUD';
 import { Preloader } from 'react-materialize';
 
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import { formatDate } from '../../../system/formatingData';
+import MyMapComponent from '../../../system/googleMap';
+
 export const OfferDetailsInfo = (props) => {
 
     function IfExist(data) {
@@ -9,11 +11,11 @@ export const OfferDetailsInfo = (props) => {
     return (
 
         <>
-
+            <br/>
             <h6 className="bold link"><i className="fas fa-map-marker-alt"></i> {IfExist(props.location.strAddress.route)&& props.location.strAddress.route} {IfExist(props.location.strAddress.street_number)&& props.location.strAddress.street_number + ", "}{IfExist(props.location.strAddress.locality)&& "город " + props.location.strAddress.locality + ", "} {IfExist(props.location.strAddress.administrative_area_level_1)&& props.location.strAddress.administrative_area_level_1 }</h6>
 
             <ul className="col s12 left noMarginPadding">
-                
+                <br/>
                 {IfExist(props.data_created) && <li><i className="far fa-calendar-alt"></i> Опубликованно: {formatDate(new Date(props.data_created.seconds * 1000))}</li>} 
                 {IfExist(props.description) && <li> <p> {props.description}</p></li>}
                 {IfExist(props.for_split_rent) ? <li>Для совместной аренды: <i className="fas fa-check"></i> </li>: <li>Для совместной аренды: <i className="fas fa-times"></i></li>}
@@ -28,6 +30,12 @@ export const OfferDetailsInfo = (props) => {
 
 
             </ul>
+            <div className="row noMarginPadding map">
+                MAP:
+                { 
+                    <MyMapComponent {...props.location} />
+                }
+            </div>
         </>
 
     )

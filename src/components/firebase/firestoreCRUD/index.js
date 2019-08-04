@@ -3,8 +3,9 @@ import firebase from './../../system/fireConfig';
 
 
 
-export function saveInFirestoreByKey(collection, key, data) {
-    return firebase.firestore().collection(collection).doc(key).set({
+export function saveInFirestoreByKey(collection,  data) {
+    data.date_created = firebase.firestore.FieldValue.serverTimestamp() 
+    return firebase.firestore().collection(collection).doc().set({
         ...data
     })
 }
@@ -22,7 +23,10 @@ export function getDataByKey(collection, key) {
 }
 export function dataSnapshot(collection, key) {
     return firebase.firestore().collection(collection).doc(key)
+}
 
+export function dataSnapshotCollection(collection) {
+    return firebase.firestore().collection(collection).orderBy("date_created", "asc")
 }
 
 export function getOfferCollection(collection) {
@@ -34,8 +38,8 @@ export function getSavedOffers( uid) {
 
 export function saveInFirestoreAutoKey(collection,data){
     // Add a new document with a generated id.
-    data.data_created = firebase.firestore.FieldValue.serverTimestamp() 
-    return firebase.firestore().collection(collection).add({
+    data.date_created = firebase.firestore.FieldValue.serverTimestamp() 
+    return firebase.firestore().collection(collection).doc().add({
         ...data
     })
 }

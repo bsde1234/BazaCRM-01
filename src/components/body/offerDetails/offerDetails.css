@@ -32,7 +32,8 @@ h1{
 }
 .carousel-item img{
     box-shadow: 4px 3px 6px #ccc;
-
+    width: auto !important;
+    height: 100%;
 }
 #carouselWrap {
 

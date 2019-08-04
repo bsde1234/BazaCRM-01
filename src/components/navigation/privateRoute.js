@@ -11,15 +11,14 @@ export const  PrivateRoute = ({ component: Component, ...rest }) => {
 
     return (
       <Route
-        {...rest}
-        render={(props) => {
+        render={(history) => {
           if(rest.auth) {
-            return <Component {...rest} />
+            return <Component {...rest} {...history} />
           } else {
             return <Redirect
               to={{
                 pathname: "/authentication",
-                state: { from: props.location }
+                state: { from: history.location }
               }}
             />
           }}

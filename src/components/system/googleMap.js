@@ -7,7 +7,7 @@ import mapStyles from './mapStyles.json';
 const MyMapComponent = compose(
   
   withProps({
-    googleMapURL: "https://maps.googleapis.ru/maps/api/js?key=AIzaSyBVx04MozqTwq0ikjuernD5cuubbM6UQSM&v=3.exp&language=ru&region=RU",
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBVx04MozqTwq0ikjuernD5cuubbM6UQSM&v=3.exp&language=ru&region=RU",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -15,13 +15,14 @@ const MyMapComponent = compose(
   withScriptjs,
   withGoogleMap
 )((props) =>
-
+  
   <GoogleMap
     defaultZoom={12}
     center={{ lat: props.location.lat, lng: props.location.lng}}
     clickableIcons={false}
     defaultOptions={{styles: mapStyles}}
   >
+    {console.log(props)}
     {props.isMarkerShown?
         <Marker draggable={true} position={{ lat: props.location.lat, lng: props.location.lng}} onDragEnd={(e)=>props.markerOnDrag(e)}  />
     :

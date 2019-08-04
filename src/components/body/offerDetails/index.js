@@ -16,13 +16,15 @@ export default class OfferDetails extends Component {
         }
     }
 
-    componentWillMount(){
+    componentWillMount(){ 
         if(!this.state.offerInfo) {
-            this.main() 
+            this.main();
         } else {
             this.getUserInfo(this.state.offerInfo.uid).then(userInfo => {
+                let data = {...userInfo.userInfo};
+                data.uid = this.state.offerInfo.uid;
                 this.setState({
-                    userInfo:{...userInfo.userInfo},
+                    userInfo:{...data},
                     loaded:true
                 })
             });
@@ -42,7 +44,8 @@ export default class OfferDetails extends Component {
         }
     }
 
-    getOfferData =(key)=>{ 
+    getOfferData =(key)=>{
+        if(key){ 
         return getDataByKey('offers', key)
             .then(data=>{
                 if(data){           
@@ -54,6 +57,7 @@ export default class OfferDetails extends Component {
                 }
             })
             .catch(error=>{console.log(error)})
+        } 
     }
 
     getFavItems=(uid)=> {
@@ -70,18 +74,16 @@ export default class OfferDetails extends Component {
 
     main=()=>{ 
         let data = {};
-        this.getOfferData(this.state.offerKey)
-
-        .then(offerData=>{
+        if(this.state.offerKey)
+        this.getOfferData(this.state.offerKey).then(offerData=>{
             if(offerData){ 
                 data.offerInfo = {...offerData};
                 this.getUserInfo(offerData.uid)
                 .then(userInfo => {
                     data.userInfo = {...userInfo.userInfo};
-    
+                    data.userInfo.uid = offerData.uid;
                     if(this.state.uid){
                         this.getFavItems(this.state.uid);
-    
                     } 
                     this.setState({
                         ...data,
@@ -96,22 +98,32 @@ export default class OfferDetails extends Component {
                     })
                 })
             }
-
-            
         });
-        
+        else {
+            this.setState({
+                error: true
+            })
+        }
     }
 
     render() {
         return (
             <>
+            
+            <br/>
+                <div className="row ">
+                    <div className="col s12 ">
+                        <div className="col s6 backBtn noMarginPadding">
+                            {this.state.url?<div className="btn grey darken-3  btn-small" onClick={(e)=>{this.props.goBack()}}><i className="fas fa-chevron-left"></i> Назад</div> : <Link to="/"><div className="btn grey darken-3  btn-small"><i className="fas fa-home"></i> На главную</div></Link> }
+                        </div>
+                    </div>
+                </div>
                 {   
                     this.state.loaded&&this.getDetailPage(this.state.offerInfo.offer_type_1)
                 }
                 {this.state.error&&
                     <div className="center-align">
                         <h3><i className="far fa-sad-cry"></i> Обьявление не найдено <i className="far fa-sad-cry"></i></h3>
-                        <Link to="/home"><button className="btn grey darken-3 white-text  " ><i className="fas fa-home"></i> На главную</button></Link>    
                     </div>
                     
                 }

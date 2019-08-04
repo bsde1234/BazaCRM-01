@@ -15,7 +15,7 @@ export const NavAction = (props) => {
                         <li><NavLink to='/message'><i className="far fa-paper-plane"></i> Сообщения</NavLink></li>
                         <li><NavLink activeClassName="activeLink" exact to='/testCompWrap'>testCompWrap</NavLink></li>
                         <li hidden={props.auth ? true : false}><NavLink to='/authentication'>Регистрация/Вход</NavLink></li>
-                        <li className="navUserInfo" hidden={props.auth ? false : true}><NavLink to='/profile'>{props.auth && props.auth.displayName ? props.auth.displayName : 'Profile'}</NavLink></li>
+                        {props.auth?<li className="navUserInfo" ><NavLink to='/profile'><i className="fas fa-user"></i> {props.auth && props.auth.displayName ? props.auth.displayName : 'Profile'}</NavLink></li>:''}
                         <li hidden={props.auth ? false : true} onClick={doSignOut} className="red-text"><i style={{fontSize: '15px'}} className="fas fa-sign-out-alt"></i> Log Out</li>
                     </ul>
                 </div>

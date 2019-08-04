@@ -13,9 +13,8 @@ export const AptRoomsOfferDetails = (props) => {
 
     return (
         <>
-            
             <div className="row">
-                <div className="col m5 s12 right">
+                <div className="col m5 s12 right ">
                     <div className="favoriteRow">
                         <span className="right">
                             {<FavoriteOffers offersList={favOffers ? favOffers.offerID : ''} uid={uid} offerId={offerKey} />}
@@ -43,8 +42,7 @@ export const AptRoomsOfferDetails = (props) => {
                 </div>
                 <div className="imagesWrap col s12 m7 left">
                     <div id="carouselWrap">
-                        <div className="right"><i className="fas fa-expand-arrows-alt"></i></div>
-
+                        
                         <div><CustomCarousel images={offerInfo.images} /></div>
                         
                     </div>
@@ -57,7 +55,7 @@ export const AptRoomsOfferDetails = (props) => {
                 <div className="col m5 s12 right">
                         {userInfo && props.loaded ?
                             // USER COMPONENT START
-                            <UserInfo {...userInfo} />
+                            <UserInfo userInfo={userInfo}  uid={uid}  />
                             : <div className="center-align red-text">
                                 Данные владельца обьявления не найдены.
                                 <br />Вероятней всего, данный пользователь удалил свой аккаунт.

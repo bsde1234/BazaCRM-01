@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import './signUp.css';
 import { doCreateUserWithEmailAndPassword, sentVerifyUserEmail } from '../../firebase/fireAuthCRUD';
 import { ErrorHandler } from '../../system/errorHandler';
 import InputMask from 'react-input-mask';
 import { DatePicker } from 'react-materialize';
 import { saveInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import M from "materialize-css";
+import './signUp.css';
 const INITIAL_STATE = {
   name: '',
   lastName: '',

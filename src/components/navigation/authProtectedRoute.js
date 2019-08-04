@@ -12,14 +12,14 @@ export const  AuthProtectedRoute = ({ component: Component, ...rest }) => {
     return (
       <Route
         {...rest}
-        render={(props) => {
+        render={(history) => {
           if(!rest.auth) {
-            return <Component {...rest} />
+            return <Component {...rest} {...history} />
           } else {
             return <Redirect
               to={{
                 pathname: "/",
-                state: { from: props.location }
+                state: { from: history.location }
               }}
             />
           }}

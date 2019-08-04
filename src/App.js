@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/navigation';
-import Home from './components/body/home';
+import {Home} from './components/body/home';
 import firebase from './components/system/fireConfig'
 import { AuthUserContext } from './components/auth/session';
 import PasswordForgetForm from './components/auth/forgetPassword';
@@ -16,6 +16,7 @@ import MessageMain from './components/auth/message';
 import OfferDetails from './components/body/offerDetails';
 import { PublicRoute } from './components/navigation/publicRoute';
 import Authentication from './components/auth/authentication';
+import { getDataByKey } from './components/firebase/firestoreCRUD';
 
 class App extends Component {
   constructor(props) {
@@ -28,9 +29,16 @@ class App extends Component {
     
     this.listener = firebase.auth().onAuthStateChanged(
       authUser => {
-          authUser && authUser.emailVerified
-            ? this.setState({ authUser, complete:true })
-            : this.setState({ authUser: null,complete:true })
+
+          if(authUser && authUser.emailVerified){
+            getDataByKey('users', authUser.uid).then((userInfo)=>{
+              this.setState({ authUser, ...userInfo, complete:true })
+            })
+              
+          }
+          else {
+            this.setState({ authUser: null,complete:true });
+          }
       },error=>console.log("ERROR: ", error), complete=>console.log('complete',complete)
     )
   }
@@ -48,14 +56,14 @@ class App extends Component {
             <Navbar />
             <div className="container">
               <Switch>
-                <PublicRoute key="home1" exact path="/" auth={this.state.authUser?this.state.authUser.uid:''} component={Home} />
+                <PublicRoute key="home1" exact path="/"  auth={this.state.authUser?this.state.authUser.uid:''} component={Home} />
                 <PublicRoute key="home2" exact path="/home" auth={this.state.authUser?this.state.authUser.uid:''} component={Home} />
-                <PublicRoute exact path='/details' auth={this.state.authUser} component={OfferDetails} />
+                <PublicRoute exact path='/details' userInfo={this.state.userInfo}  auth={this.state.authUser} component={OfferDetails} />
                 <PrivateRoute path='/addoffer' auth={this.state.authUser} component={AddOfferIndex} />
-                <PrivateRoute path='/message' auth={this.state.authUser}  component={MessageMain} />
+                <PrivateRoute path='/message' userInfo={this.state.userInfo} auth={this.state.authUser}  component={MessageMain} />
                 <AuthProtectedRoute path='/authentication' auth={this.state.authUser} component={Authentication} />
                 <AuthProtectedRoute path='/forgetPassword' component={PasswordForgetForm} />
-                <PrivateRoute path="/profile" auth={this.state.authUser}  component={Profile} />
+                <PrivateRoute path="/profile" userInfo={this.state.userInfo} auth={this.state.authUser}  component={Profile} />
                 <Route component={PageNotFound} />
               </Switch>
             </div>

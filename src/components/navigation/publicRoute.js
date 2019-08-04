@@ -8,11 +8,9 @@ export const  PublicRoute = ({ component: Component, ...rest }) => {
 
     return (
       <Route
-        {...rest}
-        render={(props) => {
-            return <Component {...rest} />
-          }
-        }
+
+        render={({ history }) => (<Component {...rest} {...history}/>)}
+
       />
     );
   }

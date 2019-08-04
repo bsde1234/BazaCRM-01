@@ -3,16 +3,16 @@ import M from "materialize-css";
 import DragNdrop from '../../system/dragNdrop';
 import { saveInFirestoreAutoKey, updateInFirestoreByKey } from '../../firebase/firestoreCRUD';
 import { SaveInStorageByURL } from '../../firebase/filestorageCRUD';
-import { Button  } from 'react-materialize';
+import { Button } from 'react-materialize';
 import MapAddOffer from '../../system/mapAddOffer';
-import { AptAndRoomsForm} from './fieldsForm/apt&Rooms';
-
+import { AptAndRoomsForm } from './fieldsForm/apt&Rooms';
+import { Link } from "react-router-dom";
 const INITIAL_STATE = {
     offerInfo: {
         title: '',
         currency: '$',
         approved: false,
-        description:'',
+        description: '',
         uid: '',
     },
     system: {
@@ -35,6 +35,7 @@ export default class AddOfferMainForm extends Component {
             uid: this.props.user.uid
         };
         this.images = [];
+        window.onbeforeunload = function() {return "";}
     }
 
     handleChange = (event) => {
@@ -44,7 +45,7 @@ export default class AddOfferMainForm extends Component {
 
     }
     handleCheckBoxes = (event) => {
-        if(this.state.offerInfo[event.target.name]){
+        if (this.state.offerInfo[event.target.name]) {
             let info = Object.assign({}, this.state.offerInfo);    //creating copy of object
             info[event.target.name] = '';                        //updating value
             this.setState({ offerInfo: info });
@@ -60,8 +61,8 @@ export default class AddOfferMainForm extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        formValidate(this.form).then((validateRes)=>{
-            if (this.images && !this.state.error && !validateRes) { 
+        formValidate(this.form).then((validateRes) => {
+            if (this.images && !this.state.error && !validateRes) {
                 this.submitToStorage('offers');
             } else {
                 let system = Object.assign({}, this.state.system);    //creating copy of object
@@ -73,7 +74,7 @@ export default class AddOfferMainForm extends Component {
     saveInStorage = () => {
         this.setState({ system: { saving: true } })
         if (this.state.offerInfo.title) {
-            this.submitToStorage('savedOffers');  
+            this.submitToStorage('savedOffers');
         } else {
             let t = document.getElementById('title');
             if (!t.checkValidity()) { t.classList.add("invalid") }
@@ -84,37 +85,37 @@ export default class AddOfferMainForm extends Component {
     submitToStorage = (path) => {
         const data = this.state.offerInfo;
         data.uid = this.props.user.uid;
-        if(data.savedID){
+        if (data.savedID) {
             updateInFirestoreByKey(`${path}/`, data.savedID, data)
-            .then((docRef) => {
-                this.afterSecondSaving(docRef,path, data);
-            }).catch((error) => {
-                this.setState({
-                    error: error.massage
-                })
-            });
+                .then((docRef) => {
+                    this.afterSecondSaving(docRef, path, data);
+                }).catch((error) => {
+                    this.setState({
+                        error: error.massage
+                    })
+                });
         } else {
             saveInFirestoreAutoKey(`${path}/`, data)
-            .then((docRef) => {
-                this.afterSubmission(docRef,path, data)
-            }).catch((error) => {
-                this.setState({
-                    error: error.massage
-                })
-            });
+                .then((docRef) => {
+                    this.afterSubmission(docRef, path, data)
+                }).catch((error) => {
+                    this.setState({
+                        error: error.massage
+                    })
+                });
         }
-        
+
     }
     addImagesHandler = (images) => {
         this.images = images;
     }
 
-    mapData =(data)=>{
+    mapData = (data) => {
         let offerInfo = Object.assign({}, this.state.offerInfo);    //creating copy of object
         offerInfo.location = data;                   //updating value
         this.setState({ offerInfo });
     }
-    afterSubmission = (docRef,path, data) => {
+    afterSubmission = (docRef, path, data) => {
         if (this.images.length !== 0) {
             SaveInStorageByURL(`${path}/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => {
                 let json = { 'images': data }
@@ -125,7 +126,7 @@ export default class AddOfferMainForm extends Component {
                 });
             })
         } else {
-            if(path === 'savedOffers'){
+            if (path === 'savedOffers') {
                 toastMsg('Сохраненно.');
                 data.savedID = docRef.id;
                 this.setState({
@@ -138,7 +139,7 @@ export default class AddOfferMainForm extends Component {
             }
         }
     }
-    afterSecondSaving = (docRef,path, data)=>{
+    afterSecondSaving = (docRef, path, data) => {
         if (this.images.length !== 0) {
             SaveInStorageByURL(`${path}/${docRef.id}/`, this.state.uid, this.images, docRef.id).then(data => {
                 let json = { 'images': data }
@@ -149,7 +150,7 @@ export default class AddOfferMainForm extends Component {
                 });
             })
         } else {
-                toastMsg('Сохраненно.');
+            toastMsg('Сохраненно.');
         }
     }
 
@@ -162,6 +163,13 @@ export default class AddOfferMainForm extends Component {
         const { system, offerInfo } = this.state
         return (
             <>
+                <div className="row">
+                    <div className="col s12">
+                        <div className="col s6 backBtn">
+                            <Link to="/"><div className="btn grey darken-3  btn-small"><i className="fas fa-home"></i> На главную</div></Link>
+                                </div>
+                    </div>
+                </div>
                 {system.finished ?
                     <div className="col s12 m8 l6 offset-m2 offset-l3 ">
                         <div className="center-align green-text ">
@@ -171,7 +179,8 @@ export default class AddOfferMainForm extends Component {
                     </div>
                     :
                     <>
-                        <form onSubmit={this.handleSubmit} noValidate ref={el =>(this.form = el)}>
+
+                        <form onSubmit={this.handleSubmit} noValidate ref={el => (this.form = el)}>
 
                             <div className="col s12 m8 l6 offset-m2  offset-l3 ">
                                 <div className="center-align"><h5> Добавить новое обьявление.</h5></div>
@@ -201,11 +210,11 @@ export default class AddOfferMainForm extends Component {
                                         </select>
                                     </div>
                                     <div className="col s12 m12 red-text noMarginPadding">
-                                        {Math.sign(offerInfo.price) === -1 ?<li>Не должно быть отрицательным.</li>:''}
+                                        {Math.sign(offerInfo.price) === -1 ? <li>Не должно быть отрицательным.</li> : ''}
                                     </div>
                                 </div>
-                                {( ()=> {
-                                    switch (offerInfo.offer_type_1 ) {
+                                {(() => {
+                                    switch (offerInfo.offer_type_1) {
                                         case 'Дом':
                                             return <AptAndRoomsForm handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} offerInfo={this.state.offerInfo} />;
                                         case 'warning':
@@ -223,12 +232,12 @@ export default class AddOfferMainForm extends Component {
                                 </div>
 
                                 <div>
-                                <h6 className="center-align"><i className="fas fa-images"></i> Фотографии</h6>
+                                    <h6 className="center-align"><i className="fas fa-images"></i> Фотографии</h6>
                                     <DragNdrop addImage={this.addImagesHandler} required={true} error={system.noImages} />
                                 </div>
                             </div>
                             <div id="mapWrap">
-                                <MapAddOffer  returnToParent={this.mapData}/>
+                                <MapAddOffer returnToParent={this.mapData} />
                             </div>
                             <div className="col s12 m8 l6 offset-m2  offset-l3 ">
                                 <button className="waves-effect waves-light btn-small left" onClick={this.saveInStorage} type="button">
@@ -248,33 +257,33 @@ export default class AddOfferMainForm extends Component {
     }
 }
 
-async function formValidate(dataForm){
-        const form = dataForm.getElementsByClassName("required");
-        let error = false;
-        for (let field of form) {
-            switch (field.type) {
-                case 'text':
-                case 'tel':
-                case 'number':
-                case 'textarea':
-                    if (!field.value || field.value === "") { 
-                        field.classList.add("invalid");
-                        error = true;
-                    };
-                    break;
-                case 'select-one':
-                    const el = field.parentNode.firstChild
-                    if (!el.value || el.value === "Выберите") {
-                        el.classList.add("invalid");
-                        error = true;
-                    }
-                    break;
-                default:
-                    break;
-            }
+async function formValidate(dataForm) {
+    const form = dataForm.getElementsByClassName("required");
+    let error = false;
+    for (let field of form) {
+        switch (field.type) {
+            case 'text':
+            case 'tel':
+            case 'number':
+            case 'textarea':
+                if (!field.value || field.value === "") {
+                    field.classList.add("invalid");
+                    error = true;
+                };
+                break;
+            case 'select-one':
+                const el = field.parentNode.firstChild
+                if (!el.value || el.value === "Выберите") {
+                    el.classList.add("invalid");
+                    error = true;
+                }
+                break;
+            default:
+                break;
         }
-        return error;  
+    }
+    return error;
 }
-function toastMsg(text){
-    window.M.toast({html:text}, 14000)
+function toastMsg(text) {
+    window.M.toast({ html: text }, 14000)
 }
