@@ -76,3 +76,7 @@ ul{
 .materializePreloader .circle{
     border-width: 2px !important;
 }
+/*  MODAL  */
+.modal-content{
+    max-height: 500px;
+}

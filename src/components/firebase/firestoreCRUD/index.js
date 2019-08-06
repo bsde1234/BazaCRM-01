@@ -4,8 +4,9 @@ import firebase from './../../system/fireConfig';
 
 
 export function saveInFirestoreByKey(collection,  data) {
-    data.date_created = firebase.firestore.FieldValue.serverTimestamp() 
-    return firebase.firestore().collection(collection).doc().set({
+    data.date_created = firebase.firestore.FieldValue.serverTimestamp();
+    
+    return firebase.firestore().collection(collection).doc(""+new Date().getTime()).set({
         ...data
     })
 }
@@ -25,8 +26,8 @@ export function dataSnapshot(collection, key) {
     return firebase.firestore().collection(collection).doc(key)
 }
 
-export function dataSnapshotCollection(collection) {
-    return firebase.firestore().collection(collection).orderBy("date_created", "asc")
+export function dataSnapshotCollection(collection, limit) {
+    return firebase.firestore().collection(collection).orderBy("date_created", "desc").limit(limit)
 }
 
 export function getOfferCollection(collection) {

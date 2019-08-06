@@ -9,7 +9,8 @@ import { CustomCarousel } from '../../../system/carousel';
 
 export const AptRoomsOfferDetails = (props) => {
 
-    const { offerInfo, favOffers, offerKey, uid, userInfo } = props;
+    const { offerInfo, favOffers, offerKey, uid, userInfo, recipientInfo } = props;
+
 
     return (
         <>
@@ -25,8 +26,8 @@ export const AptRoomsOfferDetails = (props) => {
                     </div>
 
                     <div className="center-align offerTitle">
-                        <h1>{offerInfo.title}</h1>
-                        <h6 className="bold">{offerInfo.offer_type_2}</h6>
+                        <h1 className="bold">{offerInfo.title}</h1>
+                        <h6 className="fw-100">{offerInfo.offer_type_2}</h6>
                     </div>
                     <div className="row">
                         <div className="col s6 center-align">
@@ -53,9 +54,9 @@ export const AptRoomsOfferDetails = (props) => {
 
 
                 <div className="col m5 s12 right">
-                        {userInfo && props.loaded ?
+                        {recipientInfo && props.loaded ?
                             // USER COMPONENT START
-                            <UserInfo userInfo={userInfo}  uid={uid}  />
+                            <UserInfo {...props}  />
                             : <div className="center-align red-text">
                                 Данные владельца обьявления не найдены.
                                 <br />Вероятней всего, данный пользователь удалил свой аккаунт.

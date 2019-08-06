@@ -11,6 +11,7 @@ export default class OfferDetails extends Component {
         super(props);
         this.state = {
             uid: this.props.auth?this.props.auth.uid:'',
+            userInfo: this.props.userInfo?this.props.userInfo:'',
             ...this.props.location.state,
             offerKey: new URLSearchParams(this.props.location.search).get('id')
         }
@@ -20,18 +21,17 @@ export default class OfferDetails extends Component {
         if(!this.state.offerInfo) {
             this.main();
         } else {
-            this.getUserInfo(this.state.offerInfo.uid).then(userInfo => {
-                let data = {...userInfo.userInfo};
+            this.getUserInfo(this.state.offerInfo.uid).then(recipientInfo => {
+                let data = {...recipientInfo.userInfo};
                 data.uid = this.state.offerInfo.uid;
                 this.setState({
-                    userInfo:{...data},
+                    recipientInfo:{...data},
                     loaded:true
                 })
             });
         }
     }
     getDetailPage(type){ 
-
         switch (type) {
             case 'Дом':
                 return <AptRoomsOfferDetails {...this.state} />;
@@ -75,13 +75,15 @@ export default class OfferDetails extends Component {
     main=()=>{ 
         let data = {};
         if(this.state.offerKey)
+        
         this.getOfferData(this.state.offerKey).then(offerData=>{
             if(offerData){ 
                 data.offerInfo = {...offerData};
                 this.getUserInfo(offerData.uid)
-                .then(userInfo => {
-                    data.userInfo = {...userInfo.userInfo};
-                    data.userInfo.uid = offerData.uid;
+                .then(recipientInfo => {
+                    data.recipientInfo = {...recipientInfo.userInfo};
+                    data.recipientInfo.uid = offerData.uid;
+                    
                     if(this.state.uid){
                         this.getFavItems(this.state.uid);
                     } 

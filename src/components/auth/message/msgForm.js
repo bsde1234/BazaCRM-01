@@ -9,7 +9,7 @@ export default class MsgForm extends Component {
         this.state = {
             uid: this.props.uid,
             file: '',
-            recipient: this.props.recipient,
+            recipient: this.props.recipientInfo,
             readed: false
         }
     }
@@ -23,11 +23,12 @@ export default class MsgForm extends Component {
     handleSubmit=(event)=>{
         event.preventDefault();
         if(this.state.text){
-            saveInFirestoreByKey(`messages/${this.state.uid}/${this.state.recipient}`, this.state ).then(()=>{
-                saveInFirestoreByKey(`messages/${this.state.recipient}/${this.state.uid}`, this.state ).then(()=>{
+            saveInFirestoreByKey(`messages/${this.state.uid}/${this.state.recipientInfo.uid}`, this.state ).then(()=>{
+                saveInFirestoreByKey(`messages/${this.state.recipientInfo.uid}/${this.state.uid}`, this.state ).then(()=>{
+                    this.props.increaseMsgLimit(1);
                     this.setState({
                         text: ''
-                    })
+                    });
                 }).catch(error=>{
                     console.log("ERROR", error);
                 })
@@ -42,9 +43,8 @@ export default class MsgForm extends Component {
                 <form onSubmit={this.handleSubmit} noValidate ref={el => (this.form = el)}>
 
                     <div className="input-field row withoutPadding">
-                        <textarea required onChange={this.handleChange} maxLength="800" id="textarea2" name="text" className="materialize-textarea validate required s12"></textarea>
-                        <label htmlFor="textarea2">Описание<span className="red-text">*</span></label>
-                        
+                        <textarea value={this.state.text} required onChange={this.handleChange} maxLength="800" id="textarea2" name="text" className="materialize-textarea validate required s12"></textarea>
+                        <label htmlFor="textarea2">Текст сообщения<span className="red-text">*</span></label>
                     </div>
                     <button type="submit">Submit</button>
                 </form>

@@ -19,3 +19,10 @@ export const formatDate = (data, withoutTime) => {
     const date = data.getDate() + " " + months[data.getMonth()] + " " + data.getFullYear()
     if(withoutTime)  return date; else return date + time ;
 }
+
+export const formatTime = (data, textBefore = '', after = '') => {
+
+    let min = data.getMinutes();
+    const minutes = min.toString().length===1?"0"+min:min;
+    return (textBefore + data.getHours() + ":" + minutes + after);
+}

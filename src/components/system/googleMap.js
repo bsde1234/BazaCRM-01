@@ -22,7 +22,6 @@ const MyMapComponent = compose(
     clickableIcons={false}
     defaultOptions={{styles: mapStyles}}
   >
-    {console.log(props)}
     {props.isMarkerShown?
         <Marker draggable={true} position={{ lat: props.location.lat, lng: props.location.lng}} onDragEnd={(e)=>props.markerOnDrag(e)}  />
     :

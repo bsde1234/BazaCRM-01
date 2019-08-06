@@ -13,38 +13,52 @@ export default class MessageMain extends Component {
     constructor(props){
         super(props);
         this.state = {
-            uid : this.props.uid,
-            userInfo: this.props.userInfo,
-            recipient: this.props.recipient?this.props.recipient:null,
+            ...this.props, 
+            limit: 10
         }
+        
     }
-
+    
     componentWillMount(){
-        if(this.state.recipient){
-            dataSnapshotCollection(`/messages/${this.state.uid}/${this.state.recipient}/` )
+        this.getMessagesSnapshot(this.state.limit)
+    }
+    getMessagesSnapshot(limit){
+        if(this.state.recipientInfo && this.state.uid){
+            
+            //alert(`messages/${this.state.uid}/${this.state.recipientInfo.uid}`)
+            dataSnapshotCollection(`messages/${this.state.uid}/${this.state.recipientInfo.uid}`, limit )
             .onSnapshot((querySnapshot)=> {
                 
                 let messages = [];
                 querySnapshot.forEach((doc)=> {
-                    messages.push(doc.data());
+                    messages.unshift(doc.data());
                 });
                 this.setState({
                     msgList: messages
-                }, ()=>{console.log(this.state)})
+                })
             
             })
-        }
+        } 
     }
+    increaseMsgLimit=(number)=>{
+        this.setState({
+            limit: this.state.limit + Number(number)
+        }, ()=> {
+            this.getMessagesSnapshot(this.state.limit)
+        })
+
+    }
+
     render() {
         return (
             <div>
-                {this.state.recipient?
+                {this.state.recipientInfo?
                 <>
-                    <MsgList msgList={this.state.msgList} />
-                    <MsgForm uid={this.state.uid} recipient={this.state.recipient} />
+                    <MsgList {...this.state} increaseMsgLimit={this.increaseMsgLimit} />
+                    <MsgForm {...this.state} increaseMsgLimit={this.increaseMsgLimit} />
                 </>
                 : 'AAA'}
-
+    <h1>{this.msgLimit}</h1>
             </div>
         )
     }

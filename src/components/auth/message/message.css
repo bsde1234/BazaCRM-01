@@ -1,0 +1,23 @@
+.modal-content .msgList{
+    max-height: 300px;
+    overflow: scroll;
+}
+.modal-footer {
+    display: none;
+}
+.modal-content{
+    height: 500px;
+}
+.msgList li{
+    display: block;
+    width: 100%;
+}
+.msgList li.right{
+    text-align: right;
+}
+.msgList li.left{
+    text-align: left;
+}
+.msgList .msgTime{
+    font-size: 12px;
+}

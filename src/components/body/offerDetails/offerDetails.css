@@ -5,6 +5,9 @@
 .fw-100{
     font-weight: 100;
 }
+.offerTitle h1{
+    font-size: 17px;
+}
 /* USER PIC */
 .userPic img {
     max-height: 100px;

@@ -31,6 +31,7 @@ class App extends Component {
       authUser => {
 
           if(authUser && authUser.emailVerified){
+            window.user = authUser;
             getDataByKey('users', authUser.uid).then((userInfo)=>{
               this.setState({ authUser, ...userInfo, complete:true })
             })
