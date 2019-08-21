@@ -6,6 +6,10 @@ import { formatDate } from '../../../system/formatingData';
 export const AptRoomsOfferPreview = (props) => {
     const { data, favOffers, uid } = props;
 
+
+
+
+
     return (
         <>
             <div className="row noMarginPadding">

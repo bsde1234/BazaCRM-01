@@ -15,6 +15,7 @@ export default class RecentOffers extends Component {
         }
     }
 
+
     componentWillMount(){
         
         if(this.state.uid){ this.getFavItems(this.state.uid); } 
@@ -42,6 +43,10 @@ export default class RecentOffers extends Component {
                     favOffers: doc.data() ? {...doc.data()} : ''
             })
         })
+    }
+
+    componentDidMount(){
+      
     }
 
     render() {
@@ -75,7 +80,7 @@ export default class RecentOffers extends Component {
         } else {
             return (
                 <>
-                    {loaded ? <div className="center-align red-text"><h5>No records found.</h5></div> : <Preloader />}
+                    {loaded ? <div className="center-align red-text"><h5>Обьявлений не найдено.</h5></div> : <Preloader />}
                 </>
             )
         }
