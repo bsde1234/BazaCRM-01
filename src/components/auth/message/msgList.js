@@ -3,20 +3,19 @@ import { formatDate, formatTime } from '../../system/formatingData';
 
 export default function  MsgList (props) {
 
-    const {msgList, userInfo, recipientInfo, uid} = props;
-
-    
-    console.log(props)
-  
+    const {msgList, userInfo, recipientInfo, uid, finish} = props;
+    console.log(finish)
     return (
 
         <div className="row">
             {
                 <div className="center-align "><h5 className="noMarginPadding">{recipientInfo.name + " " + recipientInfo.lastName}</h5></div>
             
-            }<div onClick={()=>props.increaseMsgLimit(10)} className="center-align"><i className="fas fa-sync-alt"></i> Загрузить еще</div>
+            }
+            
+            {!finish&&(<div onClick={()=>props.increaseMsgLimit(11)} className="center-align"><i className="fas fa-sync-alt"></i> Загрузить еще</div>)}
             <ul className="msgList" >
-                {msgList && msgList.length?msgList.map((data, idx)=>{
+                {msgList && msgList.length!==0?msgList.map((data, idx)=>{
 
                     return (
                         <li key={idx} className={data.uid===uid?"right": "left"}>
@@ -29,8 +28,7 @@ export default function  MsgList (props) {
                                     :
                                     <div><hr/>{recipientInfo.name + " " + recipientInfo.lastName}</div>
                                 } 
-                            </span>
-                    }
+                            </span>}
 
                             {data.text}
                             <div className="fw-100 msgTime">
@@ -42,7 +40,7 @@ export default function  MsgList (props) {
                             </div>
                         </li>
                     )
-                }):"Нет сообщений"}
+                }):<div className="center-align">Нет сообщений</div>}
             </ul>
         </div>
     )

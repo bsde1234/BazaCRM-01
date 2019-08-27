@@ -21,3 +21,19 @@
 .msgList .msgTime{
     font-size: 12px;
 }
+
+.msgForm {
+    position: relative;
+    margin: 15px;
+}
+.msgForm textarea{
+    max-height: 105px;
+}
+.msgForm .sbtBtn {
+    position: absolute;
+    bottom: 12px;
+    right: 0 !important;
+}
+.msgForm .btn-flat:focus {
+    background-color: rgba(0,0,0,0.0);
+}

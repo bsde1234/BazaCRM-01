@@ -14,7 +14,7 @@ export default class MessageMain extends Component {
         super(props);
         this.state = {
             ...this.props, 
-            limit: 10
+            limit: 11
         }
         
     }
@@ -24,8 +24,6 @@ export default class MessageMain extends Component {
     }
     getMessagesSnapshot(limit){
         if(this.state.recipientInfo && this.state.uid){
-            
-            //alert(`messages/${this.state.uid}/${this.state.recipientInfo.uid}`)
             dataSnapshotCollection(`messages/${this.state.uid}/${this.state.recipientInfo.uid}`, limit )
             .onSnapshot((querySnapshot)=> {
                 
@@ -33,8 +31,10 @@ export default class MessageMain extends Component {
                 querySnapshot.forEach((doc)=> {
                     messages.unshift(doc.data());
                 });
+                
                 this.setState({
-                    msgList: messages
+                    msgList: messages,
+                    finish: messages.length < limit?true:false
                 })
             
             })

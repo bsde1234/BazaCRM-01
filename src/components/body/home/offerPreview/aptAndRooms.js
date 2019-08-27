@@ -9,7 +9,6 @@ export const AptRoomsOfferPreview = (props) => {
 
 
 
-
     return (
         <>
             <div className="row noMarginPadding">

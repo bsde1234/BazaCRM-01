@@ -9,7 +9,7 @@ export default class MsgForm extends Component {
         this.state = {
             uid: this.props.uid,
             file: '',
-            recipient: this.props.recipientInfo,
+            recipientInfo: this.props.recipientInfo,
             readed: false
         }
     }
@@ -39,14 +39,18 @@ export default class MsgForm extends Component {
 
     render() {
         return (
-            <div>
-                <form onSubmit={this.handleSubmit} noValidate ref={el => (this.form = el)}>
+            <div >
+                <form onSubmit={this.handleSubmit}  ref={el => (this.form = el)}>
+                    <div className="row msgForm">
+                        <div className="input-field  col s11 noMarginPadding">
+                            <textarea value={this.state.text} required onChange={this.handleChange} maxLength="800" id="textarea2" name="text" className="materialize-textarea validate required"></textarea>
+                            <label htmlFor="textarea2">Текст сообщения<span className="red-text">*</span></label>
+                        </div>
 
-                    <div className="input-field row withoutPadding">
-                        <textarea value={this.state.text} required onChange={this.handleChange} maxLength="800" id="textarea2" name="text" className="materialize-textarea validate required s12"></textarea>
-                        <label htmlFor="textarea2">Текст сообщения<span className="red-text">*</span></label>
+                        <div className="input-field col s1 noMarginPadding sbtBtn">
+                            <button className=" btn-flat" type="submit"><i className="far fa-paper-plane"></i></button>
+                        </div>
                     </div>
-                    <button type="submit">Submit</button>
                 </form>
             </div>
         )
